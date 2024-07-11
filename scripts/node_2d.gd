@@ -26,13 +26,3 @@ func _input(event):
 		if selected_point != -1:
 			points[selected_point] = event.position
 	print(points)
-
-
-func _unhandled_input(event):
-	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			var mouse_pos = event.position
-			for i in range(points.size()):
-				if points[i].distance_to(mouse_pos) < point_radius:
-					selected_point = i
-					break

@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://bogepnxodfeyj"]
+
+[ext_resource type="Script" path="res://scripts/character.gd" id="1_34ggj"]
+[ext_resource type="Texture2D" uid="uid://pwjs8bf3dr1x" path="res://graphics/icon.svg" id="2_3vftq"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_34ggj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_3vftq")
+
+[node name="Button" type="Button" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+size_flags_vertical = 4
+
+[connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
+[connection signal="button_up" from="Button" to="." method="_on_button_button_up"]
+[connection signal="mouse_entered" from="Button" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="Button" to="." method="_on_button_mouse_exited"]
