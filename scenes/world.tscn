@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://dcye3hshybkmc"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_od65m"]
-[ext_resource type="PackedScene" uid="uid://dnbiu3hoho43c" path="res://scenes/character.tscn" id="2_d6tsq"]
 [ext_resource type="PackedScene" uid="uid://dajefe25vpnrg" path="res://scenes/workplace.tscn" id="2_hpr3n"]
+[ext_resource type="Script" path="res://scenes/control.gd" id="3_18sc0"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_od65m")
@@ -10,7 +10,20 @@ script = ExtResource("1_od65m")
 [node name="Workplace" parent="." instance=ExtResource("2_hpr3n")]
 position = Vector2(290, 175)
 
-[node name="Character" parent="." instance=ExtResource("2_d6tsq")]
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 559.0
+offset_top = 100.0
+offset_right = 599.0
+offset_bottom = 140.0
+script = ExtResource("3_18sc0")
 
-[node name="Character2" parent="." instance=ExtResource("2_d6tsq")]
-position = Vector2(679, 321)
+[node name="LabelProduction" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = -23.0
+offset_top = -38.0
+offset_right = 17.0
+offset_bottom = 31.0
+theme_override_font_sizes/font_size = 50
+text = "0"
