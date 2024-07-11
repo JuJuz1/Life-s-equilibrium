@@ -1,8 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://dcye3hshybkmc"]
+[gd_scene load_steps=3 format=3 uid="uid://dcye3hshybkmc"]
 
-[ext_resource type="PackedScene" uid="uid://bogepnxodfeyj" path="res://scenes/character.tscn" id="1_famdu"]
+[ext_resource type="PackedScene" uid="uid://dnbiu3hoho43c" path="res://scenes/character.tscn" id="2_d6tsq"]
+[ext_resource type="PackedScene" uid="uid://dajefe25vpnrg" path="res://scenes/workplace.tscn" id="2_hpr3n"]
 
 [node name="World" type="Node2D"]
 
-[node name="Node2D" parent="." instance=ExtResource("1_famdu")]
-position = Vector2(584, 230)
+[node name="Character" parent="." instance=ExtResource("2_d6tsq")]
+
+[node name="Character2" parent="." instance=ExtResource("2_d6tsq")]
+
+[node name="Area2D" parent="." instance=ExtResource("2_hpr3n")]
+position = Vector2(290, 175)
