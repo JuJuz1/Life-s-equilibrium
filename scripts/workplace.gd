@@ -1,15 +1,19 @@
-extends Node2D
+extends Area2D
 ## Workplace mechanics
 
 ## When entering workplace
 func _on_area_entered(area: Area2D) -> void:
-	if area is Character:
-		# Start timers and associated stuff
-		area.energy -= 10
-		print(area.energy)
+	print(area.facility)
+	area.facility = "workplace"
+	area.age_increase = 2
+	# Start timers and associated stuff in character script?
+	area.energy -= 10
+	print(area.energy)
+	print(area.facility)
 
 
 ## When leaving
 func _on_area_exited(area: Area2D) -> void:
-	pass # Replace with function body.
-	# Stop timers
+	print(area.facility)
+	area.facility = "null"
+	print(area.facility)

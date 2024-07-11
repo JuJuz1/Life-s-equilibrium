@@ -12,13 +12,26 @@ var age: int = 0
 var energy: int = 0
 var disease: bool = false
 
+## Timers
+@onready var timer_age = $TimerAge
+const TIMER_AGE_TIMEOUT: int = 4
+var age_increase: int = 1
+
+@onready var timer_energy = $TimerEnergy
+
+## Attribute to determine where character is located, affects other attributes
+var facility: String = "null"
+
 func _ready() -> void:
-	pass # Replace with function body.
+	timer_age.timeout.connect(age_add)
+	timer_age.wait_time = TIMER_AGE_TIMEOUT
+	timer_age.start()
 
 
-func _process(_delta) -> void:
-	if dragging:
-		position = get_global_mouse_position() - offset
+## Adds age to the character
+func age_add() -> void:
+	age += age_increase
+	print(age)
 
 
 ## When pressed down
@@ -40,3 +53,9 @@ func _on_button_mouse_entered() -> void:
 ## When mouse leaves the area
 func _on_button_mouse_exited() -> void:
 	$Sprite2D.modulate.a = 1
+
+
+## Called every frame
+func _process(_delta) -> void:
+	if dragging:
+		position = get_global_mouse_position() - offset
