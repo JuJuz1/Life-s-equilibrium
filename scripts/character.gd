@@ -26,7 +26,7 @@ var id: int
 var age: int
 var age_group: AgeGroup = AgeGroup.CHILD
 var energy: int = 100
-var sick: bool = false
+var sickness: bool = false
 
 ## Timers
 ## Age
@@ -44,6 +44,10 @@ var energy_change: int = -1
 const TIMER_PRODUCTION_TIMEOUT: int = 5
 #var production_value: int = 2
 
+## Sickness
+@onready var timer_sickness: Timer = $TimerSickness
+const TIMER_SICKNESS_TIMEOUT: int = 10 # TODO: change
+
 ## Attribute to determine where character is located, affects other attributes
 var facility: String = "null"
 
@@ -59,7 +63,14 @@ func _ready() -> void:
 	timer_production.timeout.connect(produce)
 	timer_production.wait_time = TIMER_PRODUCTION_TIMEOUT
 	
-	age = randi_range(10, 30)
+	timer_sickness.timeout.connect(sickness_check)
+	timer_sickness.wait_time = TIMER_SICKNESS_TIMEOUT
+	timer_sickness.start()
+	
+	# TODO: testing
+	#age = randi_range(10, 30)
+	age = 55
+	
 	$Labels.labels_update(age, energy)
 	
 	# TODO: for testing
@@ -84,8 +95,8 @@ func age_add() -> void:
 		age_group = AgeGroup.ADULT
 	else:
 		age_group = AgeGroup.CHILD
-	print(age)
-	print(AgeGroup.keys()[age_group])
+	#print(age)
+	#print(AgeGroup.keys()[age_group])
 	$Labels.labels_update(age, energy)
 
 
@@ -96,8 +107,33 @@ func energy_amend() -> void:
 		energy = 100
 	if energy < 0:
 		energy = 0
-	print(energy)
+	#print(energy)
 	$Labels.labels_update(age, energy)
+
+
+## Checks and calculates probability to become sick, emits death if already sick and probability hits
+func sickness_check() -> void:
+	# Only elderly can die for now
+	if not (age_group == AgeGroup.ELDERLY):
+		return
+	if sickness:
+		death.emit(id)
+		print("death")
+		queue_free()
+		return
+	
+	var random = randf_range(0, 1)
+	print("RANDOM: " + str(random))
+	if not (facility == "hospital"):
+		var age_probability: float = float(age) / 100
+		print("AGE PROBABILITY: " + str(age_probability))
+		# TODO: seems ok maybe
+		if random < age_probability - 0.1: # example: if age is 50 -> 40%, if age_probability > 1 -> always sick (age > 100)
+			sickness = true
+			print_debug("sick")
+	elif random < 0.25: # 25%
+		sickness = true
+		print_debug("sick")
 
 
 ## Start or disable production when entering or leaving workplace
@@ -105,10 +141,10 @@ func energy_amend() -> void:
 func production_state_change(enabled: bool) -> void:
 	if enabled:
 		timer_production.start()
-		print_debug("PRODUCTION START")
+		#print_debug("PRODUCTION START")
 	else:
 		timer_production.stop()
-		print_debug("PRODUCTION STOP")
+		#print_debug("PRODUCTION STOP")
 
 
 ## Produced value when working

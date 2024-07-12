@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dcye3hshybkmc"]
+[gd_scene load_steps=6 format=3 uid="uid://dcye3hshybkmc"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_od65m"]
 [ext_resource type="PackedScene" uid="uid://dajefe25vpnrg" path="res://scenes/workplace.tscn" id="2_hpr3n"]
 [ext_resource type="Script" path="res://scripts/ui.gd" id="3_18sc0"]
-[ext_resource type="PackedScene" uid="uid://dnbiu3hoho43c" path="res://scenes/character.tscn" id="3_80abp"]
 [ext_resource type="PackedScene" uid="uid://0as4s51phssd" path="res://scenes/recreation_zone.tscn" id="4_yo5hm"]
 [ext_resource type="PackedScene" uid="uid://cawh8gfun1sjp" path="res://scenes/hospital.tscn" id="5_nj28b"]
 
@@ -39,9 +38,6 @@ text = "0"
 
 [node name="CharacterSpawn" type="Marker2D" parent="."]
 position = Vector2(-75, 382)
-
-[node name="Character" parent="." instance=ExtResource("3_80abp")]
-position = Vector2(657, 243)
 
 [node name="TimerRestart" type="Timer" parent="."]
 wait_time = 60.0

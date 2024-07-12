@@ -23,7 +23,8 @@ func _ready() -> void:
 	# Initialize the array
 	characters.resize(15)
 	characters.fill(0)
-	for i in 2:
+	# TODO: change amount
+	for i in 1:
 		await get_tree().create_timer(1).timeout
 		character_new_spawn()
 	
@@ -46,7 +47,9 @@ func character_new_spawn() -> void:
 	character.action_taken.connect(_on_character_action_taken)
 	character.death.connect(_on_character_death)
 	
-	character.global_position = character_spawn
+	# TODO: change position
+	#character.global_position = character_spawn
+	character.global_position = Vector2(100,100)
 	
 	# Find the first slot that doesn't contain a character reference
 	# Assign to the array and assing an id based on the position in the array
@@ -79,10 +82,9 @@ func characters_amount() -> int:
 ## [param id] character's id
 func _on_character_death(id: int) -> void:
 	characters[id] = 0
-	
 	var amount: int = characters_amount()
 	if amount <= 0:
-		pass
+		automatic_restart()
 		# Game lose
 
 
@@ -90,7 +92,7 @@ func _on_character_death(id: int) -> void:
 ## [param value] value that is added to the total
 func _on_character_production(value: int) -> void:
 	production += value
-	print("PRODUCTION: " + str(production))
+	#print("PRODUCTION: " + str(production))
 	$UI.update_label(production)
 
 
