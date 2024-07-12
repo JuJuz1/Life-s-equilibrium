@@ -5,6 +5,7 @@ class_name Character
 ## Signals
 signal production(value: int) ## Emits to world when working
 signal action_taken ## Emits to world when taking any action
+signal death(id: int) ## Emits to world when a character dies
 
 ## Age group for the character
 enum AgeGroup {
@@ -21,10 +22,11 @@ var offset: Vector2 = Vector2.ZERO
 var animation: bool = false
 
 ## Attributes
-var age: int = 0
+var id: int
+var age: int
 var age_group: AgeGroup = AgeGroup.CHILD
 var energy: int = 100
-var disease: bool = false
+var sick: bool = false
 
 ## Timers
 ## Age

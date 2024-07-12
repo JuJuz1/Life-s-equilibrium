@@ -14,9 +14,15 @@ const TIMER_RESTART_TIME: int = 60
 ## Production of the town
 var production: int = 0
 
+## Array to hold character references throughout the game, useful for ending the game
+## Determines which doors are colored green and which are red
+var characters: Array = Array()
+
 func _ready() -> void:
 	await get_tree().create_timer(0.5).timeout
-	print(character_spawn)
+	# Initialize the array
+	characters.resize(15)
+	characters.fill(0)
 	for i in 2:
 		await get_tree().create_timer(1).timeout
 		character_new_spawn()
@@ -38,8 +44,46 @@ func character_new_spawn() -> void:
 	var character = CHARACTER.instantiate()
 	character.production.connect(_on_character_production)
 	character.action_taken.connect(_on_character_action_taken)
+	character.death.connect(_on_character_death)
+	
 	character.global_position = character_spawn
+	
+	# Find the first slot that doesn't contain a character reference
+	# Assign to the array and assing an id based on the position in the array
+	for i in characters.size() - 1:
+		if characters[i] is not Character:
+			characters[i] = character
+			character.id = i
+			break
+	
 	add_child(character)
+	
+	var amount: int = characters_amount()
+	if amount >= 15:
+		print("WON")
+		pass
+		# Game win
+
+
+## Check how many characters are currently alive
+## [returns count] the amount of characters alive
+func characters_amount() -> int:
+	var count: int = 0
+	for i in characters.size() - 1:
+		if characters[i] is Character:
+			count += 1
+	return count
+
+
+## When a character dies
+## [param id] character's id
+func _on_character_death(id: int) -> void:
+	characters[id] = 0
+	
+	var amount: int = characters_amount()
+	if amount <= 0:
+		pass
+		# Game lose
 
 
 ## When a characters works and produces value
