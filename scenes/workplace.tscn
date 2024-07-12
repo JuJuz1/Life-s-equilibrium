@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/workplace.gd" id="1_nsxy8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fsyyk"]
-size = Vector2(337, 201)
+size = Vector2(455.5, 310.5)
 
 [node name="Area2D" type="Area2D"]
 collision_layer = 0

@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://cawh8gfun1sjp"]
+
+[ext_resource type="Script" path="res://scripts/hospital.gd" id="1_ejoc2"]
+
+[node name="Hospital" type="Area2D"]
+position = Vector2(871, 33)
+script = ExtResource("1_ejoc2")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(17, 16, 113, 11, 180, 29, 223, 104, 176, 156, 65, 146, -20, 111, -26, 66, -19, 18)
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

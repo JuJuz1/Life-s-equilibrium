@@ -4,28 +4,40 @@ class_name Character
 
 ## Signals
 signal production(value: int) ## Emits to world when working
+signal action_taken ## Emits to world when taking any action
 
 ## Age group for the character
-enum AgeGroup {CHILD, ADULT, ELDERLY}
+enum AgeGroup {
+	CHILD, 
+	ADULT, 
+	ELDERLY,
+	}
 
 ## Used to move the character
 var dragging: bool = false
 ## Offset to not snap character to mouse position when pressed the first time
 var offset: Vector2 = Vector2.ZERO
+## Used to determine when tweening/animation to prevent user action
+var animation: bool = false
 
 ## Attributes
 var age: int = 0
 var age_group: AgeGroup = AgeGroup.CHILD
-var energy: int = 0
+var energy: int = 100
 var disease: bool = false
 
 ## Timers
+## Age
 @onready var timer_age = $TimerAge
 const TIMER_AGE_TIMEOUT: int = 4
 var age_increase: int = 1
 
+## Energy level
 @onready var timer_energy = $TimerEnergy
+const TIMER_ENERGY_TIMEOUT: int = 3
+var energy_change: int = -1
 
+## Production
 @onready var timer_production = $TimerProduction
 const TIMER_PRODUCTION_TIMEOUT: int = 5
 #var production_value: int = 2
@@ -38,11 +50,30 @@ func _ready() -> void:
 	timer_age.wait_time = TIMER_AGE_TIMEOUT
 	timer_age.start()
 	
+	timer_energy.timeout.connect(energy_amend)
+	timer_energy.wait_time = TIMER_ENERGY_TIMEOUT
+	timer_energy.start()
+	
 	timer_production.timeout.connect(produce)
 	timer_production.wait_time = TIMER_PRODUCTION_TIMEOUT
+	
+	age = randi_range(10, 30)
+	$Labels.labels_update(age, energy)
+	
+	# TODO: for testing
+	#return
+	
+	animation = true
+	await get_tree().create_timer(1).timeout
+	var tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_LINEAR)
+	tween.tween_property(self, "position:x", position.x + 250, 1.5)
+	tween.tween_property(self, "position:y", position.y + 125, 1)
+	tween.finished.connect(func() -> void:
+		await get_tree().create_timer(0.5).timeout
+		animation = false)
 
 
-## Adds age to the character
+## Adds age to the character, dependent on the current facility (ex. workplace increases the amount)
 func age_add() -> void:
 	age += age_increase
 	if age >= 50:
@@ -53,6 +84,18 @@ func age_add() -> void:
 		age_group = AgeGroup.CHILD
 	print(age)
 	print(AgeGroup.keys()[age_group])
+	$Labels.labels_update(age, energy)
+
+
+## Changes to energy levels, dependent on the facility
+func energy_amend() -> void:
+	energy += energy_change
+	if energy > 100:
+		energy = 100
+	if energy < 0:
+		energy = 0
+	print(energy)
+	$Labels.labels_update(age, energy)
 
 
 ## Start or disable production when entering or leaving workplace
@@ -78,8 +121,12 @@ func produce() -> void:
 
 ## When pressed down
 func _on_button_button_down() -> void:
+	if animation:
+		return
 	dragging = true
 	offset = get_global_mouse_position() - position
+	# Emit to reset timer to restart the game
+	action_taken.emit()
 
 
 ## When not pressed
@@ -89,6 +136,8 @@ func _on_button_button_up() -> void:
 
 ## When mouse hovers over the character
 func _on_button_mouse_entered() -> void:
+	if animation:
+		return
 	$Sprite2D.modulate.a = 0.5
 
 
@@ -97,7 +146,7 @@ func _on_button_mouse_exited() -> void:
 	$Sprite2D.modulate.a = 1
 
 
-## Called every frame
+## Called every frame, used to move the character
 func _process(_delta) -> void:
 	if dragging:
 		position = get_global_mouse_position() - offset

@@ -1,14 +1,13 @@
 extends Area2D
-## Workplace mechanics
+## Recreation zone
 
-## When entering workplace
+## When entering the zone
 ## [param area] area what enters, should always be a character
 func _on_area_entered(area: Area2D) -> void:
 	print(area.facility)
-	area.facility = "workplace"
-	area.age_increase = 2
+	area.facility = "recreation_zone"
+	area.energy_change = 1
 	# Start timers and associated stuff in character script?
-	area.production_state_change(true)
 	print(area.energy)
 	print(area.facility)
 
@@ -17,7 +16,6 @@ func _on_area_entered(area: Area2D) -> void:
 ## [param area] area
 func _on_area_exited(area: Area2D) -> void:
 	print(area.facility)
-	area.age_increase = 1
+	area.energy_change = -1
 	area.facility = "null"
-	area.production_state_change(false)
 	print(area.facility)
