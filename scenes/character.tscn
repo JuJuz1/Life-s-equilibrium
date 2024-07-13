@@ -37,11 +37,24 @@ text = "0"
 
 [node name="LabelEnergy" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = -22.0
+offset_left = -26.0
 offset_top = -52.0
-offset_right = 34.0
+offset_right = 30.0
 offset_bottom = -29.0
 text = "0/100"
+
+[node name="LabelState" type="Label" parent="Labels"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = -243.0
+offset_top = -91.0
+offset_right = 279.0
+offset_bottom = -89.0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="."]
 self_modulate = Color(1, 1, 1, 0)

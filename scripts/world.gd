@@ -82,6 +82,7 @@ func characters_amount() -> int:
 ## [param id] character's id
 func _on_character_death(id: int) -> void:
 	characters[id] = 0
+	# Make correct door red
 	var amount: int = characters_amount()
 	if amount <= 0:
 		automatic_restart()
