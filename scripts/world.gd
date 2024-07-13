@@ -25,7 +25,7 @@ func _ready() -> void:
 	characters.fill(0)
 	# TODO: change amount
 	for i in 1:
-		await get_tree().create_timer(1).timeout
+		await get_tree().create_timer(2).timeout
 		character_new_spawn()
 	
 	timer_restart.timeout.connect(automatic_restart)
