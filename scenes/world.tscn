@@ -16,8 +16,8 @@ script = ExtResource("1_od65m")
 modulate = Color(0.411765, 0.760784, 0.439216, 0.564706)
 offset_left = -58.0
 offset_top = -26.0
-offset_right = 1267.0
-offset_bottom = 705.0
+offset_right = 2026.0
+offset_bottom = 1143.0
 texture = SubResource("CanvasTexture_1cqoc")
 
 [node name="Workplace" parent="." instance=ExtResource("2_hpr3n")]

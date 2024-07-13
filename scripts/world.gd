@@ -11,18 +11,39 @@ const CHARACTER = preload("res://scenes/character.tscn")
 @onready var timer_restart: Timer = $TimerRestart
 const TIMER_RESTART_TIME: int = 60
 
-## Production of the town
+## Production of the town and limit when a new character arrives
 var production: int = 0
+var production_limit: int = 5
 
-## Array to hold character references throughout the game, useful for ending the game
+## Array to hold character references throughout the game, useful for all operations considering characters
 ## Determines which doors are colored green and which are red
 var characters: Array = Array()
 
+## Used when starting game
+var started: bool = false
+
 func _ready() -> void:
-	await get_tree().create_timer(0.5).timeout
 	# Initialize the array
 	characters.resize(15)
 	characters.fill(0)
+
+
+## Any input
+func _unhandled_input(event) -> void:
+	# PC Escape
+	if event.is_action_pressed("quit"):
+		get_tree().quit()
+	if event.is_action_pressed("click"):
+		if started:
+			return
+		start()
+
+
+## Starts game and tutorial 
+func start() -> void:
+	if started:
+		return
+	started = true
 	# TODO: change amount
 	for i in 1:
 		await get_tree().create_timer(2).timeout
@@ -31,13 +52,6 @@ func _ready() -> void:
 	timer_restart.timeout.connect(automatic_restart)
 	timer_restart.wait_time = TIMER_RESTART_TIME
 	timer_restart.start()
-
-
-## Any input
-func _unhandled_input(event) -> void:
-	# PC Escape
-	if event.is_action_pressed("quit"):
-		get_tree().quit()
 
 
 ## Spawns a new character
@@ -78,10 +92,17 @@ func characters_amount() -> int:
 	return count
 
 
+## Restart the timer to restart the game
+func _on_character_action_taken() -> void:
+	timer_restart.start()
+
+
 ## When a character dies
 ## [param id] character's id
 func _on_character_death(id: int) -> void:
 	characters[id] = 0
+	# TODO: needs to be tested
+	production_limit = int(production_limit * 0.75)
 	# Make correct door red
 	var amount: int = characters_amount()
 	if amount <= 0:
@@ -90,16 +111,17 @@ func _on_character_death(id: int) -> void:
 
 
 ## When a characters works and produces value
+## Increases production limit in correlation to current production
 ## [param value] value that is added to the total
 func _on_character_production(value: int) -> void:
 	production += value
+	print("PRODUCTION LIMIT: " + str(production_limit))
+	if production >= production_limit:
+		production_limit += production #lerp(production, production + production_limit, 1)
+		character_new_spawn()
+		print("NEW PRODUCTION LIMIT: " + str(production_limit))
 	#print("PRODUCTION: " + str(production))
 	$UI.update_label(production)
-
-
-## Restart the timer to restart the game
-func _on_character_action_taken() -> void:
-	timer_restart.start()
 
 
 ## Automatically restarts the game

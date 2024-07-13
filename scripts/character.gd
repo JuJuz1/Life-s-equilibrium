@@ -166,25 +166,26 @@ func sickness_check() -> void:
 	# If not inside hospital -> gets sickness more often and higher chance to die to sickness
 	# Else -> lower chance to get sick, lower chance to die and small chance to cure
 	
+	
+	# TODO: seems ok maybe, needs thorough testing
 	# Not inside hospital
 	if not (facility == "hospital"):
 		if sickness:
-			if random < 0.4: # 40% chance to die
+			if random < age_probability - 0.2: # ex. age is 40 -> 20%, 80 -> 60%
 				_death()
 				return
 		else:
-			# TODO: seems ok maybe
-			if random < age_probability - 0.1: # example: if age is 50 -> 40%, if age_probability > 1 -> always sick (age > 100)
+			if random < age_probability - 0.1: # example: if age is 50 -> 40%, if age_probability > 1.1 -> always sick (age > 110)
 				sickness = true
 				print_debug("sick")
 	
 	# Inside hospital
 	else:
 		if sickness:
-			if random < 0.25: # 25% chance to die
+			if random < age_probability - 0.4: # ex. 60 -> 20%, 90 -> 50%
 				_death()
 				return
-			elif random > 0.7: # 30% chance to cure
+			elif random > age_probability - 0.2: # ex. 20 -> 100%, 60 -> 60%, 100 -> 20%
 				sickness = false
 				print_debug("cured")
 		else:
@@ -211,7 +212,7 @@ func _death() -> void:
 		print("death")
 		$Labels.state_label_show(death_message)
 		# TODO: comment in :D
-		#death.emit(id)
+		death.emit(id)
 		input_prevent = true
 		var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_BOUNCE)
 		tween.tween_property(self, "modulate:a", 0, 3)
