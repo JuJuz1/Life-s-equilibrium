@@ -10,9 +10,9 @@ const CHARACTER = preload("res://scenes/character.tscn")
 ## Save canvasmodulate tint
 var canvas_tint: Color
 
-## Timer to automatically restart the game if no action (not moving a character) has been taken for 1 minute
+## Timer to automatically restart the game if no action (not moving a character) has been taken for 1,5 minute
 @onready var timer_restart: Timer = $TimerRestart
-const TIMER_RESTART_TIME: int = 60
+const TIMER_RESTART_TIME: int = 90
 
 ## Production of the town and limit when a new character arrives
 var production: int = 0
