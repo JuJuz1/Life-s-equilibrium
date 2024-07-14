@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsjq2i1enspf0"
-path="res://.godot/imported/face_base.png-1605b6cb3418b22a195e50b533f13046.ctex"
+uid="uid://cgaf4rpt04sfy"
+path="res://.godot/imported/face_boy_sick.png-928097a5c6be34627e0c8db7ac7f1032.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/face_base.png"
-dest_files=["res://.godot/imported/face_base.png-1605b6cb3418b22a195e50b533f13046.ctex"]
+source_file="res://graphics/faces/face_boy_sick.png"
+dest_files=["res://.godot/imported/face_boy_sick.png-928097a5c6be34627e0c8db7ac7f1032.ctex"]
 
 [params]
 

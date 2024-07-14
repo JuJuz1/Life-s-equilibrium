@@ -8,9 +8,21 @@ signal action_taken ## Emits to world when taking any action
 signal death(id: int) ## Emits to world when a character dies
 
 ## Preload different faces
-const FACE_BASE: CompressedTexture2D = preload("res://graphics/face_base.png")
-const FACE_BASE_ENERGY_LOW: CompressedTexture2D = preload("res://graphics/face_base_energy_low.png")
-const FACE_BASE_SICK: CompressedTexture2D = preload("res://graphics/face_base_sick.png")
+const FACE_BASE = preload("res://graphics/faces/face_base.png")
+const FACE_BASE_ENERGY_LOW = preload("res://graphics/faces/face_base_energy_low.png")
+const FACE_BASE_SICK = preload("res://graphics/faces/face_base_sick.png")
+
+const FACE_BOY = preload("res://graphics/faces/face_boy.png")
+const FACE_BOY_ENERGY_LOW = preload("res://graphics/faces/face_boy_energy_low.png")
+const FACE_BOY_SICK = preload("res://graphics/faces/face_boy_sick.png")
+
+const FACE_GIRL = preload("res://graphics/faces/face_girl.png")
+const FACE_GIRL_ENERGY_LOW = preload("res://graphics/faces/face_girl_energy_low.png")
+const FACE_GIRL_SICK = preload("res://graphics/faces/face_girl_sick.png")
+
+const FACE_GIRL_OLD = preload("res://graphics/faces/face_girl_old.png")
+const FACE_GIRL_OLD_ENERGY_LOW = preload("res://graphics/faces/face_girl_old_energy_low.png")
+const FACE_GIRL_OLD_SICK = preload("res://graphics/faces/face_girl_old_sick.png")
 
 ## Age group for the character
 enum AgeGroup {
