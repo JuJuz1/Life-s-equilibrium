@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dcye3hshybkmc"]
+[gd_scene load_steps=9 format=3 uid="uid://dcye3hshybkmc"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_od65m"]
 [ext_resource type="PackedScene" uid="uid://dajefe25vpnrg" path="res://scenes/workplace.tscn" id="2_hpr3n"]
@@ -6,11 +6,15 @@
 [ext_resource type="PackedScene" uid="uid://0as4s51phssd" path="res://scenes/recreation_zone.tscn" id="4_yo5hm"]
 [ext_resource type="PackedScene" uid="uid://bptbsaqreifkp" path="res://scenes/dormitory.tscn" id="5_8yo4u"]
 [ext_resource type="PackedScene" uid="uid://cawh8gfun1sjp" path="res://scenes/hospital.tscn" id="5_nj28b"]
+[ext_resource type="Material" uid="uid://xg6h5gdeg71v" path="res://material_unshaded.tres" id="7_kptb1"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1cqoc"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_od65m")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.194349, 0.194349, 0.194349, 1)
 
 [node name="TextureRect" type="TextureRect" parent="."]
 modulate = Color(0.411765, 0.760784, 0.439216, 0.564706)
@@ -50,8 +54,26 @@ offset_bottom = 31.0
 theme_override_font_sizes/font_size = 50
 text = "0"
 
+[node name="LabelWin" type="Label" parent="UI"]
+modulate = Color(1, 1, 1, 0)
+z_index = 10
+material = ExtResource("7_kptb1")
+layout_mode = 0
+offset_left = -463.0
+offset_top = -52.0
+offset_right = 515.0
+offset_bottom = 461.0
+theme_override_font_sizes/font_size = 60
+text = "Kaupunkisi kukoistaa...
+Sait täytettyä 15 asukkaan rajan 
+ja voitit pelin!
+
+Kiitos kun pelasit!
+Tekijä: Juuso Piippo"
+horizontal_alignment = 1
+
 [node name="CharacterSpawn" type="Marker2D" parent="."]
-position = Vector2(-75, 382)
+position = Vector2(-119, 363)
 
 [node name="TimerRestart" type="Timer" parent="."]
 wait_time = 60.0

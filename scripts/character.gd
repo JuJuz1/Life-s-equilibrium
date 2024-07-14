@@ -7,6 +7,11 @@ signal production(value: int) ## Emits to world when working
 signal action_taken ## Emits to world when taking any action
 signal death(id: int) ## Emits to world when a character dies
 
+## Preload different faces
+const FACE_BASE: CompressedTexture2D = preload("res://graphics/face_base.png")
+const FACE_BASE_ENERGY_LOW: CompressedTexture2D = preload("res://graphics/face_base_energy_low.png")
+const FACE_BASE_SICK: CompressedTexture2D = preload("res://graphics/face_base_sick.png")
+
 ## Age group for the character
 enum AgeGroup {
 	CHILD, 
@@ -71,7 +76,7 @@ const TIMER_PRODUCTION_TIMEOUT: int = 5
 
 ## Sickness
 @onready var timer_sickness: Timer = $TimerSickness
-const TIMER_SICKNESS_TIMEOUT: int = 5 # TODO: change
+const TIMER_SICKNESS_TIMEOUT: int = 10 # TODO: change
 
 ## Attribute to determine where character is located, affects other attributes
 var facility: String = "null"
@@ -86,8 +91,9 @@ func _ready() -> void:
 	input_prevent = true
 	await get_tree().create_timer(1).timeout
 	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_LINEAR)
-	tween.tween_property(self, "position:x", position.x + 250, 1.5)
-	tween.tween_property(self, "position:y", position.y + 125, 1)
+	# TODO: tweak
+	tween.tween_property(self, "position:x", position.x + 435, 2)
+	tween.tween_property(self, "position:y", position.y + 170, 1)
 	tween.finished.connect(func() -> void:
 		await get_tree().create_timer(1).timeout
 		input_prevent = false
@@ -135,8 +141,15 @@ func energy_amend() -> void:
 		energy = 100
 	if energy < 0:
 		energy = 0
-	if energy < 15:
-		$Labels.state_label_show(energy_messages)
+	# TODO: for testing
+	if energy < 95:
+		if not sickness:
+			$Sprite2D.texture = FACE_BASE_ENERGY_LOW
+		# Show message in sickness_check, otherwise too many
+		#$Labels.state_label_show(energy_messages.pick_random())
+	else:
+		if not sickness:
+			$Sprite2D.texture = FACE_BASE
 	#print(energy)
 	$Labels.labels_update(age, energy)
 
@@ -197,14 +210,19 @@ func sickness_check() -> void:
 	if sickness:
 		if not was_sick: # If character gets sick
 			# TODO: for testing
-			$Sprite2D.flip_v = true
+			$Sprite2D.texture = FACE_BASE_SICK
 			$Labels.state_label_show(sickness_messages.pick_random())
 		else: # If character was already sick
 			$Labels.state_label_show(sickness_and_was_sick_message)
 	# If was sick and was cured
 	elif was_sick and not sickness:
-		$Sprite2D.flip_v = false
+		$Sprite2D.texture = FACE_BASE
 		$Labels.state_label_show(cured_messages.pick_random())
+	# If healthy 
+	# ELSE?
+	elif not was_sick and not sickness:
+		if energy < 95:
+			$Labels.state_label_show(energy_messages.pick_random())
 
 
 ## When character dies to sickness

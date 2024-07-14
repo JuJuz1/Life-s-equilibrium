@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dnbiu3hoho43c"]
 
 [ext_resource type="Script" path="res://scripts/character.gd" id="1_04opc"]
-[ext_resource type="Texture2D" uid="uid://pwjs8bf3dr1x" path="res://graphics/icon.svg" id="2_xx4x0"]
+[ext_resource type="Texture2D" uid="uid://bsjq2i1enspf0" path="res://graphics/face_base.png" id="2_240nt"]
 [ext_resource type="Script" path="res://scripts/labels.gd" id="3_kg24y"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_layby"]
@@ -11,12 +11,12 @@ radius = 31.257
 collision_mask = 0
 script = ExtResource("1_04opc")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("2_xx4x0")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_layby")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2.2, 2.2)
+texture = ExtResource("2_240nt")
 
 [node name="Labels" type="Control" parent="."]
 layout_mode = 3
@@ -27,12 +27,12 @@ script = ExtResource("3_kg24y")
 
 [node name="LabelAge" type="Label" parent="Labels"]
 layout_mode = 0
-offset_left = -6.0
-offset_top = -14.0
-offset_right = 34.0
-offset_bottom = 14.0
+offset_left = -12.0
+offset_top = 26.0
+offset_right = 28.0
+offset_bottom = 61.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 25
 text = "0"
 
 [node name="LabelEnergy" type="Label" parent="Labels"]
