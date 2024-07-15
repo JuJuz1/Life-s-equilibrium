@@ -1,0 +1,84 @@
+[gd_scene load_steps=7 format=3 uid="uid://dnbiu3hoho43c"]
+
+[ext_resource type="Script" path="res://scripts/character.gd" id="1_kkj3w"]
+[ext_resource type="Texture2D" uid="uid://bsjq2i1enspf0" path="res://graphics/faces/face_base.png" id="2_eyko6"]
+[ext_resource type="Script" path="res://scripts/labels.gd" id="3_0qwfg"]
+[ext_resource type="Texture2D" uid="uid://dllccuhhv6hf6" path="res://graphics/faces/face_base_energy_low.png" id="3_2tvhn"]
+[ext_resource type="Texture2D" uid="uid://datmksleb6542" path="res://graphics/faces/face_base_sick.png" id="4_trdt2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_layby"]
+radius = 31.257
+
+[node name="Character" type="Area2D"]
+collision_mask = 0
+script = ExtResource("1_kkj3w")
+faces = Array[CompressedTexture2D]([ExtResource("2_eyko6"), ExtResource("3_2tvhn"), ExtResource("4_trdt2")])
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_layby")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2.2, 2.2)
+texture = ExtResource("2_eyko6")
+
+[node name="Labels" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_0qwfg")
+
+[node name="LabelAge" type="Label" parent="Labels"]
+layout_mode = 0
+offset_left = -12.0
+offset_top = 26.0
+offset_right = 28.0
+offset_bottom = 61.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 25
+text = "0"
+
+[node name="LabelEnergy" type="Label" parent="Labels"]
+layout_mode = 0
+offset_left = -26.0
+offset_top = -52.0
+offset_right = 30.0
+offset_bottom = -29.0
+text = "0/100"
+
+[node name="LabelState" type="Label" parent="Labels"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = -243.0
+offset_top = -91.0
+offset_right = 279.0
+offset_bottom = -89.0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 25
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+size_flags_vertical = 4
+
+[node name="TimerAge" type="Timer" parent="."]
+wait_time = 4.0
+
+[node name="TimerEnergy" type="Timer" parent="."]
+wait_time = 3.0
+
+[node name="TimerProduction" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="TimerSickness" type="Timer" parent="."]
+
+[connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
+[connection signal="button_up" from="Button" to="." method="_on_button_button_up"]
+[connection signal="mouse_entered" from="Button" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="Button" to="." method="_on_button_mouse_exited"]

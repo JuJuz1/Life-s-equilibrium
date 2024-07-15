@@ -1,29 +1,32 @@
-[gd_scene load_steps=5 format=3 uid="uid://dnbiu3hoho43c"]
+[gd_scene load_steps=7 format=3 uid="uid://bwcf3lxy1ipr8"]
 
-[ext_resource type="Script" path="res://scripts/character.gd" id="1_04opc"]
-[ext_resource type="Texture2D" uid="uid://bsjq2i1enspf0" path="res://graphics/faces/face_base.png" id="2_240nt"]
-[ext_resource type="Script" path="res://scripts/labels.gd" id="3_kg24y"]
+[ext_resource type="Script" path="res://scripts/character.gd" id="1_k8mma"]
+[ext_resource type="Texture2D" uid="uid://bhajf61g5uv5x" path="res://graphics/faces/face_girl_old.png" id="2_7un22"]
+[ext_resource type="Texture2D" uid="uid://c7xjmmnvjiuri" path="res://graphics/faces/face_girl_old_energy_low.png" id="3_j3v68"]
+[ext_resource type="Script" path="res://scripts/labels.gd" id="3_pciue"]
+[ext_resource type="Texture2D" uid="uid://b2c372bor8k5x" path="res://graphics/faces/face_girl_old_sick.png" id="4_iiv5o"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_layby"]
 radius = 31.257
 
 [node name="Character" type="Area2D"]
 collision_mask = 0
-script = ExtResource("1_04opc")
+script = ExtResource("1_k8mma")
+faces = Array[CompressedTexture2D]([ExtResource("2_7un22"), ExtResource("3_j3v68"), ExtResource("4_iiv5o")])
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_layby")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(2.2, 2.2)
-texture = ExtResource("2_240nt")
+texture = ExtResource("2_7un22")
 
 [node name="Labels" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-script = ExtResource("3_kg24y")
+script = ExtResource("3_pciue")
 
 [node name="LabelAge" type="Label" parent="Labels"]
 layout_mode = 0

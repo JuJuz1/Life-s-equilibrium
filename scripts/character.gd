@@ -7,22 +7,8 @@ signal production(value: int) ## Emits to world when working
 signal action_taken ## Emits to world when taking any action
 signal death(id: int) ## Emits to world when a character dies
 
-## Preload different faces
-const FACE_BASE = preload("res://graphics/faces/face_base.png")
-const FACE_BASE_ENERGY_LOW = preload("res://graphics/faces/face_base_energy_low.png")
-const FACE_BASE_SICK = preload("res://graphics/faces/face_base_sick.png")
-
-const FACE_BOY = preload("res://graphics/faces/face_boy.png")
-const FACE_BOY_ENERGY_LOW = preload("res://graphics/faces/face_boy_energy_low.png")
-const FACE_BOY_SICK = preload("res://graphics/faces/face_boy_sick.png")
-
-const FACE_GIRL = preload("res://graphics/faces/face_girl.png")
-const FACE_GIRL_ENERGY_LOW = preload("res://graphics/faces/face_girl_energy_low.png")
-const FACE_GIRL_SICK = preload("res://graphics/faces/face_girl_sick.png")
-
-const FACE_GIRL_OLD = preload("res://graphics/faces/face_girl_old.png")
-const FACE_GIRL_OLD_ENERGY_LOW = preload("res://graphics/faces/face_girl_old_energy_low.png")
-const FACE_GIRL_OLD_SICK = preload("res://graphics/faces/face_girl_old_sick.png")
+## Different faces
+@export var faces: Array[CompressedTexture2D]
 
 ## Age group for the character
 enum AgeGroup {
@@ -35,13 +21,11 @@ enum AgeGroup {
 const energy_messages: Array[String] = [
 	"Alkaa jo tämä työ painamaan...",
 	"Nyt on energiatasot vähissä...",
-	"Huhhuh... millonka tämä loppuu...",
 ]
 
 ## Displayed when character gets sick
 const sickness_messages: Array[String] = [
 	"Nyt ei olo tunnu hyvältä...",
-	"Päähän koskee ja mikään ei onnistu...",
 	"Nyt pitäisi päästä sairaalaan...",
 ]
 
@@ -56,6 +40,18 @@ const cured_messages: Array[String] = [
 ## When character dies
 const death_message: String = "Nyt pääsen taivaaseen..."
 
+## When a child enters workplace and no adult or elderly nearby
+const help_message: String = "Tarvitsen jonkun opastamaan..."
+
+## When a is inside recreation zone
+const recreation_messages: Array[String] = [
+	"Täällä on hyvä virkistäytyä...",
+	"Olisikohan aika palata töihin...",
+]
+
+## When at dormitory or null (not in a facility)
+const nothing_to_do_messages: String = "Täällä ei ole tehtävää..."
+
 ## Used to move the character
 var dragging: bool = false
 ## Offset to not snap character to mouse position when pressed the first time
@@ -69,6 +65,11 @@ var age: int
 var age_group: AgeGroup = AgeGroup.CHILD
 var energy: int = 100
 var sickness: bool = false
+## Attribute to determine where character is located, affects other attributes
+var facility: String = "null"
+
+## Labels
+@onready var labels: Control = $Labels
 
 ## Timers
 ## Age
@@ -84,33 +85,33 @@ var energy_change: int = -1
 ## Production
 @onready var timer_production = $TimerProduction
 const TIMER_PRODUCTION_TIMEOUT: int = 5
-#var production_value: int = 2
+var production_value: int = 2
 
 ## Sickness
 @onready var timer_sickness: Timer = $TimerSickness
-const TIMER_SICKNESS_TIMEOUT: int = 10 # TODO: change
+const TIMER_SICKNESS_TIMEOUT: int = 10 # TODO: change?
 
-## Attribute to determine where character is located, affects other attributes
-var facility: String = "null"
+## When action taken first time, used to start timers
+var first_action: bool = true
 
 func _ready() -> void:
 	# TODO: testing
-	#age = randi_range(10, 30)
-	age = 55
-	$Labels.labels_update(age, energy)
+	age = randi_range(15, 35)
+	#age = 5
+	labels.labels_update(age, energy)
+	
+	check_age_group()
 	
 	# To prevent input
 	input_prevent = true
 	await get_tree().create_timer(1).timeout
 	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_LINEAR)
 	# TODO: tweak
-	tween.tween_property(self, "position:x", position.x + 435, 2)
+	tween.tween_property(self, "position:x", position.x + 410, 2)
 	tween.tween_property(self, "position:y", position.y + 170, 1)
 	tween.finished.connect(func() -> void:
 		await get_tree().create_timer(1).timeout
 		input_prevent = false
-		# Start the timers
-		timers_start()
 		)
 
 
@@ -135,41 +136,54 @@ func timers_start() -> void:
 ## Adds age to the character, dependent on the current facility (ex. workplace increases the amount)
 func age_add() -> void:
 	age += age_increase
+	check_age_group()
+	#print(age)
+	#print(AgeGroup.keys()[age_group])
+	labels.labels_update(age, energy)
+
+
+## Update age group if needed
+func check_age_group() -> void:
 	if age >= 50:
 		age_group = AgeGroup.ELDERLY
 	elif age >= 18:
 		age_group = AgeGroup.ADULT
 	else:
 		age_group = AgeGroup.CHILD
-	#print(age)
-	#print(AgeGroup.keys()[age_group])
-	$Labels.labels_update(age, energy)
 
 
 ## Changes to energy levels, dependent on the facility
 func energy_amend() -> void:
 	energy += energy_change
-	if energy > 100:
+	# "afk"
+	if (facility == "dormitory" or facility == "null") and not sickness:
+		labels.state_label_show(nothing_to_do_messages)
+	# Recreation
+	if energy_change > 0 and energy < 100 and not sickness:
+		labels.state_label_show(recreation_messages[0])
+	if energy >= 100:
+		if not sickness:
+			labels.state_label_show(recreation_messages[1])
 		energy = 100
 	if energy < 0:
 		energy = 0
 	# TODO: for testing
 	if energy < 95:
 		if not sickness:
-			$Sprite2D.texture = FACE_BASE_ENERGY_LOW
+			$Sprite2D.texture = faces[1]
 		# Show message in sickness_check, otherwise too many
-		#$Labels.state_label_show(energy_messages.pick_random())
+		#labels.state_label_show(energy_messages.pick_random())
 	else:
 		if not sickness:
-			$Sprite2D.texture = FACE_BASE
+			$Sprite2D.texture = faces[0]
 	#print(energy)
-	$Labels.labels_update(age, energy)
+	labels.labels_update(age, energy)
 
 
 ## Checks and calculates probability to become sick, emits death if already sick and probability hits
 func sickness_check() -> void:
-	# Only elderly can die for now
-	if not (age_group == AgeGroup.ELDERLY):
+	# Only adults and elderly can die
+	if age_group == AgeGroup.CHILD:
 		return
 	
 	"""
@@ -200,7 +214,7 @@ func sickness_check() -> void:
 				_death()
 				return
 		else:
-			if random < age_probability - 0.1: # example: if age is 50 -> 40%, if age_probability > 1.1 -> always sick (age > 110)
+			if random < age_probability - 0.2: # example: if age is 60 -> 40%, if age_probability > 1.2 -> always sick (age > 120)
 				sickness = true
 				print_debug("sick")
 	
@@ -222,25 +236,25 @@ func sickness_check() -> void:
 	if sickness:
 		if not was_sick: # If character gets sick
 			# TODO: for testing
-			$Sprite2D.texture = FACE_BASE_SICK
-			$Labels.state_label_show(sickness_messages.pick_random())
+			$Sprite2D.texture = faces[2]
+			labels.state_label_show(sickness_messages.pick_random())
 		else: # If character was already sick
-			$Labels.state_label_show(sickness_and_was_sick_message)
+			labels.state_label_show(sickness_and_was_sick_message)
 	# If was sick and was cured
 	elif was_sick and not sickness:
-		$Sprite2D.texture = FACE_BASE
-		$Labels.state_label_show(cured_messages.pick_random())
+		$Sprite2D.texture = faces[0]
+		labels.state_label_show(cured_messages.pick_random())
 	# If healthy 
 	# ELSE?
 	elif not was_sick and not sickness:
 		if energy < 95:
-			$Labels.state_label_show(energy_messages.pick_random())
+			labels.state_label_show(energy_messages.pick_random())
 
 
 ## When character dies to sickness
 func _death() -> void:
 		print("death")
-		$Labels.state_label_show(death_message)
+		labels.state_label_show(death_message)
 		# TODO: comment in :D
 		death.emit(id)
 		input_prevent = true
@@ -262,19 +276,23 @@ func production_state_change(enabled: bool) -> void:
 
 
 ## Produced value when working
+## Changed by workplace
 func produce() -> void:
-	var value: int = 0
-	match age_group:
-		AgeGroup.CHILD: value = 1
-		AgeGroup.ADULT: value = 2
-		AgeGroup.ELDERLY: value = 3
-	production.emit(value)
+	if age_group == AgeGroup.CHILD and production_value == 0 and facility == "workplace":
+		labels.state_label_show(help_message)
+	production.emit(production_value)
 
 
 ## When pressed down
 func _on_button_button_down() -> void:
 	if input_prevent:
 		return
+	
+	# Start the timers once action taken the first time
+	if first_action:
+		first_action = false
+		timers_start()
+	
 	dragging = true
 	offset = get_global_mouse_position() - position
 	# Emit to reset timer to restart the game

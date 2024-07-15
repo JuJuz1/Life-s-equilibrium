@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dcye3hshybkmc"]
+[gd_scene load_steps=10 format=3 uid="uid://dcye3hshybkmc"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_od65m"]
 [ext_resource type="PackedScene" uid="uid://dajefe25vpnrg" path="res://scenes/workplace.tscn" id="2_hpr3n"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bptbsaqreifkp" path="res://scenes/dormitory.tscn" id="5_8yo4u"]
 [ext_resource type="PackedScene" uid="uid://cawh8gfun1sjp" path="res://scenes/hospital.tscn" id="5_nj28b"]
 [ext_resource type="Material" uid="uid://xg6h5gdeg71v" path="res://material_unshaded.tres" id="7_kptb1"]
+[ext_resource type="Texture2D" uid="uid://df1fjgx7us2wt" path="res://graphics/arrow.png" id="8_awgej"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1cqoc"]
 
@@ -47,12 +48,21 @@ script = ExtResource("3_18sc0")
 
 [node name="LabelProduction" type="Label" parent="UI"]
 layout_mode = 0
-offset_left = 65.0
-offset_top = -80.0
-offset_right = 105.0
-offset_bottom = -11.0
+offset_left = 8.0
+offset_top = -43.0
+offset_right = 112.0
+offset_bottom = 26.0
 theme_override_font_sizes/font_size = 50
-text = "0"
+text = "0 / 5"
+
+[node name="LabelProductionInfo" type="Label" parent="UI"]
+layout_mode = 0
+offset_left = -71.0
+offset_top = -86.0
+offset_right = 321.0
+offset_bottom = -17.0
+theme_override_font_sizes/font_size = 40
+text = "Kaupungin tulot"
 
 [node name="LabelWin" type="Label" parent="UI"]
 modulate = Color(1, 1, 1, 0)
@@ -71,6 +81,44 @@ ja voitit pelin!
 Kiitos kun pelasit!
 Tekijä: Juuso Piippo"
 horizontal_alignment = 1
+
+[node name="LabelLose" type="Label" parent="UI"]
+modulate = Color(1, 1, 1, 0)
+z_index = 10
+material = ExtResource("7_kptb1")
+layout_mode = 0
+offset_left = -463.0
+offset_top = -52.0
+offset_right = 515.0
+offset_bottom = 461.0
+theme_override_font_sizes/font_size = 60
+text = "Kaupungissasi on hiljaista...
+Kaikki asukkaat menehtyivät ja 
+hävisit pelin!
+
+Peli alkaa alusta..."
+horizontal_alignment = 1
+
+[node name="LabelInfo" type="Label" parent="UI"]
+modulate = Color(1, 1, 1, 0)
+z_index = 10
+material = ExtResource("7_kptb1")
+layout_mode = 0
+offset_left = -445.0
+offset_top = -52.0
+offset_right = 474.0
+offset_bottom = 44.0
+theme_override_font_sizes/font_size = 70
+text = "Koita liikuttaa hahmoa!"
+horizontal_alignment = 1
+
+[node name="SpriteArrow" type="Sprite2D" parent="UI"]
+modulate = Color(1, 1, 1, 0)
+material = ExtResource("7_kptb1")
+position = Vector2(-176, 354)
+rotation = 0.0859956
+scale = Vector2(1.63772, 1.63772)
+texture = ExtResource("8_awgej")
 
 [node name="CharacterSpawn" type="Marker2D" parent="."]
 position = Vector2(-119, 363)

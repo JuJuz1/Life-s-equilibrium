@@ -1,8 +1,17 @@
 extends Node2D
 ## World script
 
-## Preload character
-const CHARACTER = preload("res://scenes/character.tscn")
+## Signals
+signal tutorial_over ## To know when tutorial is over
+
+## Preload characters
+const CHARACTER_BASE = preload("res://scenes/character_base.tscn")
+const CHARACTER_BOY = preload("res://scenes/character_boy.tscn")
+const CHARACTER_GIRL_2 = preload("res://scenes/character_girl2.tscn")
+const CHARACTER_GIRL = preload("res://scenes/character_girl.tscn")
+
+## All preloaded characters
+var characters_preload: Array[PackedScene]
 
 ## Where a new character spawns
 @onready var character_spawn: Vector2 = $CharacterSpawn.global_position
@@ -24,8 +33,15 @@ var characters: Array = Array()
 
 ## Used when starting game
 var started: bool = false
+## When a small tutorial is ongoing
+var tutorial: bool = true
 
 func _ready() -> void:
+	characters_preload.append(CHARACTER_BASE)
+	characters_preload.append(CHARACTER_BOY)
+	characters_preload.append(CHARACTER_GIRL)
+	characters_preload.append(CHARACTER_GIRL_2)
+	
 	# Initialize the array
 	characters.resize(15)
 	characters.fill(0)
@@ -58,6 +74,26 @@ func start() -> void:
 		await get_tree().create_timer(2).timeout
 		character_new_spawn()
 	
+	await get_tree().create_timer(4).timeout
+	canvas_dim(true)
+	
+	var tween_arrow: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_loops()
+	tween_arrow.tween_property($UI/SpriteArrow, "modulate:a", 1, 0.5)
+	tween_arrow.tween_property($UI/SpriteArrow, "modulate:a", 0.5, 0.5)
+	
+	await tutorial_over
+	tween_arrow.stop()
+	await get_tree().create_timer(2).timeout
+	canvas_dim(false)
+	tween_arrow = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween_arrow.tween_property($UI/SpriteArrow, "modulate:a", 0, 1)
+	tween.finished.connect(func() -> void:
+		tween_arrow.kill())
+	
+	for i in 2:
+		await get_tree().create_timer(2).timeout
+		character_new_spawn()
+	
 	timer_restart.timeout.connect(automatic_restart)
 	timer_restart.wait_time = TIMER_RESTART_TIME
 	timer_restart.start()
@@ -65,12 +101,11 @@ func start() -> void:
 
 ## Spawns a new character
 func character_new_spawn() -> void:
-	var character = CHARACTER.instantiate()
+	var character = characters_preload.pick_random().instantiate()
 	character.production.connect(_on_character_production)
 	character.action_taken.connect(_on_character_action_taken)
 	character.death.connect(_on_character_death)
 	
-	# TODO: change position
 	character.global_position = character_spawn
 	#character.global_position = Vector2(100,100)
 	
@@ -88,6 +123,10 @@ func character_new_spawn() -> void:
 	await get_tree().create_timer(4).timeout
 	# Make correct door green
 	$Dormitory.door_change(character.id, false)
+	
+	if tutorial:
+		var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property($UI/LabelInfo, "modulate:a", 1, 1)
 	
 	var amount: int = characters_amount()
 	if amount >= 15:
@@ -142,6 +181,13 @@ func canvas_dim(enabled: bool) -> void:
 
 ## Restart the timer to restart the game
 func _on_character_action_taken() -> void:
+	if tutorial:
+		tutorial = false
+		$UI/LabelInfo.text = "Hyvä!"
+		var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_property($UI/LabelInfo, "modulate:a", 0, 2)
+		tutorial_over.emit()
+	
 	timer_restart.start()
 
 
@@ -155,8 +201,11 @@ func _on_character_death(id: int) -> void:
 	$Dormitory.door_change(id, true)
 	var amount: int = characters_amount()
 	if amount <= 0:
+		# Game lose
+		canvas_dim(true)
+		$UI.show_lose()
+		await get_tree().create_timer(10).timeout
 		automatic_restart()
-		# TODO: Game lose
 
 
 ## When a characters works and produces value
@@ -166,11 +215,11 @@ func _on_character_production(value: int) -> void:
 	production += value
 	print("PRODUCTION LIMIT: " + str(production_limit))
 	if production >= production_limit:
-		production_limit += production #lerp(production, production + production_limit, 1)
+		production_limit += int(production * 0.9) #lerp(production, production + production_limit, 1)
 		character_new_spawn()
 		print("NEW PRODUCTION LIMIT: " + str(production_limit))
 	#print("PRODUCTION: " + str(production))
-	$UI.update_label(production)
+	$UI.update_label(production, production_limit)
 
 
 ## Automatically restarts the game
