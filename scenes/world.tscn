@@ -26,13 +26,13 @@ offset_bottom = 1143.0
 texture = SubResource("CanvasTexture_1cqoc")
 
 [node name="Dormitory" parent="." instance=ExtResource("5_8yo4u")]
-position = Vector2(281, 510)
+position = Vector2(222, 526)
 
 [node name="Workplace" parent="." instance=ExtResource("2_hpr3n")]
-position = Vector2(252, 183)
+position = Vector2(252, 198)
 
 [node name="Hospital" parent="." instance=ExtResource("5_nj28b")]
-position = Vector2(881, 56)
+position = Vector2(953, 147)
 
 [node name="RecreationZone" parent="." instance=ExtResource("4_yo5hm")]
 position = Vector2(860, 448)
@@ -48,19 +48,19 @@ script = ExtResource("3_18sc0")
 
 [node name="LabelProduction" type="Label" parent="UI"]
 layout_mode = 0
-offset_left = 8.0
-offset_top = -43.0
-offset_right = 112.0
-offset_bottom = 26.0
+offset_left = -12.0
+offset_top = -44.0
+offset_right = 92.0
+offset_bottom = 25.0
 theme_override_font_sizes/font_size = 50
 text = "0 / 5"
 
 [node name="LabelProductionInfo" type="Label" parent="UI"]
 layout_mode = 0
-offset_left = -71.0
-offset_top = -86.0
-offset_right = 321.0
-offset_bottom = -17.0
+offset_left = -91.0
+offset_top = -85.0
+offset_right = 301.0
+offset_bottom = -16.0
 theme_override_font_sizes/font_size = 40
 text = "Kaupungin tulot"
 
@@ -120,7 +120,7 @@ scale = Vector2(1.63772, 1.63772)
 texture = ExtResource("8_awgej")
 
 [node name="CharacterSpawn" type="Marker2D" parent="."]
-position = Vector2(-119, 363)
+position = Vector2(-179, 379)
 
 [node name="TimerRestart" type="Timer" parent="."]
 wait_time = 60.0

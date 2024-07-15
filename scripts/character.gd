@@ -109,7 +109,7 @@ func _ready() -> void:
 	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_LINEAR)
 	# TODO: tweak
 	# Audio
-	tween.tween_property(self, "position:x", position.x + randi_range(400, 470), 2)
+	tween.tween_property(self, "position:x", position.x + randi_range(400, 450), 2)
 	tween.tween_property(self, "position:y", position.y + randi_range(140, 200), 1)
 	tween.finished.connect(func() -> void:
 		await get_tree().create_timer(1).timeout
