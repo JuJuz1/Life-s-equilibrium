@@ -25,17 +25,17 @@ offset_right = 2026.0
 offset_bottom = 1143.0
 texture = SubResource("CanvasTexture_1cqoc")
 
-[node name="Workplace" parent="." instance=ExtResource("2_hpr3n")]
-position = Vector2(264, 150)
+[node name="Dormitory" parent="." instance=ExtResource("5_8yo4u")]
+position = Vector2(281, 510)
 
-[node name="RecreationZone" parent="." instance=ExtResource("4_yo5hm")]
-position = Vector2(860, 448)
+[node name="Workplace" parent="." instance=ExtResource("2_hpr3n")]
+position = Vector2(252, 183)
 
 [node name="Hospital" parent="." instance=ExtResource("5_nj28b")]
 position = Vector2(881, 56)
 
-[node name="Dormitory" parent="." instance=ExtResource("5_8yo4u")]
-position = Vector2(281, 510)
+[node name="RecreationZone" parent="." instance=ExtResource("4_yo5hm")]
+position = Vector2(860, 448)
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -105,9 +105,8 @@ z_index = 10
 material = ExtResource("7_kptb1")
 layout_mode = 0
 offset_left = -445.0
-offset_top = -52.0
 offset_right = 474.0
-offset_bottom = 44.0
+offset_bottom = 96.0
 theme_override_font_sizes/font_size = 70
 text = "Koita liikuttaa hahmoa!"
 horizontal_alignment = 1

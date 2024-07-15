@@ -64,6 +64,7 @@ var id: int
 var age: int
 var age_group: AgeGroup = AgeGroup.CHILD
 var energy: int = 100
+const ENERGY_LOW: int = 40 # TODO
 var sickness: bool = false
 ## Attribute to determine where character is located, affects other attributes
 var facility: String = "null"
@@ -107,8 +108,9 @@ func _ready() -> void:
 	await get_tree().create_timer(1).timeout
 	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_LINEAR)
 	# TODO: tweak
-	tween.tween_property(self, "position:x", position.x + 410, 2)
-	tween.tween_property(self, "position:y", position.y + 170, 1)
+	# Audio
+	tween.tween_property(self, "position:x", position.x + randi_range(400, 470), 2)
+	tween.tween_property(self, "position:y", position.y + randi_range(140, 200), 1)
 	tween.finished.connect(func() -> void:
 		await get_tree().create_timer(1).timeout
 		input_prevent = false
@@ -159,7 +161,7 @@ func energy_amend() -> void:
 	if (facility == "dormitory" or facility == "null") and not sickness:
 		labels.state_label_show(nothing_to_do_messages)
 	# Recreation
-	if energy_change > 0 and energy < 100 and not sickness:
+	if energy_change > 0 and energy < 100 and facility == "recreation_zone" and not sickness:
 		labels.state_label_show(recreation_messages[0])
 	if energy >= 100:
 		if not sickness:
@@ -168,7 +170,7 @@ func energy_amend() -> void:
 	if energy < 0:
 		energy = 0
 	# TODO: for testing
-	if energy < 95:
+	if energy < ENERGY_LOW:
 		if not sickness:
 			$Sprite2D.texture = faces[1]
 		# Show message in sickness_check, otherwise too many
@@ -214,9 +216,14 @@ func sickness_check() -> void:
 				_death()
 				return
 		else:
-			if random < age_probability - 0.2: # example: if age is 60 -> 40%, if age_probability > 1.2 -> always sick (age > 120)
-				sickness = true
-				print_debug("sick")
+			if facility == "recreation_zone":
+				if random < age_probability - 0.3: # ex. 60 -> 30%
+					sickness = true
+					print_debug("sick")
+			else:
+				if random < age_probability - 0.2: # example: if age is 60 -> 40%, if age_probability > 1.2 -> always sick (age > 120)
+					sickness = true
+					print_debug("sick")
 	
 	# Inside hospital
 	else:
@@ -247,7 +254,7 @@ func sickness_check() -> void:
 	# If healthy 
 	# ELSE?
 	elif not was_sick and not sickness:
-		if energy < 95:
+		if energy < ENERGY_LOW:
 			labels.state_label_show(energy_messages.pick_random())
 
 
@@ -280,7 +287,14 @@ func production_state_change(enabled: bool) -> void:
 func produce() -> void:
 	if age_group == AgeGroup.CHILD and production_value == 0 and facility == "workplace":
 		labels.state_label_show(help_message)
-	production.emit(production_value)
+	# If energy is low, currently 30
+	if energy < ENERGY_LOW:
+		production.emit(production_value - 1)
+	# If below 10 -> no value
+	elif energy < 15:
+		production.emit(0)
+	else:
+		production.emit(production_value)
 
 
 ## When pressed down

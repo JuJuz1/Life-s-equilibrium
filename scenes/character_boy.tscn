@@ -18,10 +18,12 @@ faces = Array[CompressedTexture2D]([ExtResource("2_a20li"), ExtResource("3_lkowp
 shape = SubResource("CircleShape2D_layby")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+use_parent_material = true
 scale = Vector2(2.2, 2.2)
 texture = ExtResource("2_a20li")
 
 [node name="Labels" type="Control" parent="."]
+use_parent_material = true
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0

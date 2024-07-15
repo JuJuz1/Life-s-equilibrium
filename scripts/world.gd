@@ -10,6 +10,9 @@ const CHARACTER_BOY = preload("res://scenes/character_boy.tscn")
 const CHARACTER_GIRL_2 = preload("res://scenes/character_girl2.tscn")
 const CHARACTER_GIRL = preload("res://scenes/character_girl.tscn")
 
+## Unshaded material
+const MATERIAL_UNSHADED = preload("res://material_unshaded.tres")
+
 ## All preloaded characters
 var characters_preload: Array[PackedScene]
 
@@ -77,18 +80,39 @@ func start() -> void:
 	await get_tree().create_timer(4).timeout
 	canvas_dim(true)
 	
+	var tween_info: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween_info.tween_property($UI/LabelInfo, "modulate:a", 1, 1)
+	
 	var tween_arrow: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_loops()
 	tween_arrow.tween_property($UI/SpriteArrow, "modulate:a", 1, 0.5)
 	tween_arrow.tween_property($UI/SpriteArrow, "modulate:a", 0.5, 0.5)
 	
+	var character_first: Character = characters[0]
+	character_first.material = MATERIAL_UNSHADED
+	
+	var tween_character: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_loops()
+	tween_character.tween_property(character_first, "modulate:a", 1, 0.5)
+	tween_character.tween_property(character_first, "modulate:a", 0.5, 0.5)
+	
 	await tutorial_over
 	tween_arrow.stop()
+	tween_character.stop()
+	
 	await get_tree().create_timer(2).timeout
 	canvas_dim(false)
 	tween_arrow = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween_arrow.tween_property($UI/SpriteArrow, "modulate:a", 0, 1)
-	tween.finished.connect(func() -> void:
-		tween_arrow.kill())
+	tween_arrow.finished.connect(func() -> void:
+		tween_arrow.kill()
+		)
+	
+	tween_character = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween_character.tween_property(character_first, "modulate:a", 1, 1)
+	tween_character.finished.connect(func() -> void:
+		tween_character.kill()
+		character_first.material = null
+		)
+	
 	
 	for i in 2:
 		await get_tree().create_timer(2).timeout
@@ -123,10 +147,6 @@ func character_new_spawn() -> void:
 	await get_tree().create_timer(4).timeout
 	# Make correct door green
 	$Dormitory.door_change(character.id, false)
-	
-	if tutorial:
-		var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_property($UI/LabelInfo, "modulate:a", 1, 1)
 	
 	var amount: int = characters_amount()
 	if amount >= 15:
@@ -183,9 +203,10 @@ func canvas_dim(enabled: bool) -> void:
 func _on_character_action_taken() -> void:
 	if tutorial:
 		tutorial = false
+		await get_tree().create_timer(1).timeout
 		$UI/LabelInfo.text = "Hyvä!"
 		var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_property($UI/LabelInfo, "modulate:a", 0, 2)
+		tween.tween_property($UI/LabelInfo, "modulate:a", 0, 3)
 		tutorial_over.emit()
 	
 	timer_restart.start()
@@ -196,7 +217,8 @@ func _on_character_action_taken() -> void:
 func _on_character_death(id: int) -> void:
 	characters[id] = 0
 	# TODO: needs to be tested
-	production_limit = int(production_limit * 0.75)
+	production_limit = int(production_limit * 0.7)
+	$UI.update_label(production, production_limit)
 	# Make correct door red
 	$Dormitory.door_change(id, true)
 	var amount: int = characters_amount()
@@ -215,7 +237,7 @@ func _on_character_production(value: int) -> void:
 	production += value
 	print("PRODUCTION LIMIT: " + str(production_limit))
 	if production >= production_limit:
-		production_limit += int(production * 0.9) #lerp(production, production + production_limit, 1)
+		production_limit += int(production * 0.8) #lerp(production, production + production_limit, 1)
 		character_new_spawn()
 		print("NEW PRODUCTION LIMIT: " + str(production_limit))
 	#print("PRODUCTION: " + str(production))

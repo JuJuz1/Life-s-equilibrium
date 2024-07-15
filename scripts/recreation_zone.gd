@@ -6,7 +6,7 @@ extends Area2D
 func _on_area_entered(area: Area2D) -> void:
 	#print(area.facility)
 	area.facility = "recreation_zone"
-	area.energy_change = 5
+	area.energy_change = 6
 	# Start timers and associated stuff in character script?
 	#print(area.energy)
 	#print(area.facility)

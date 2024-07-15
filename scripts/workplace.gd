@@ -5,13 +5,18 @@ extends Area2D
 var has_adult: bool = false
 var has_elderly: bool = false
 
+## Array to hold workers
 var workers: Array[Area2D]
+
+## All animatedsprites
+@onready var animations: Array = $Animations.get_children()
+var tweening: bool = false
 
 ## When entering workplace
 ## [param area] area what enters, should always be a character
 func _on_area_entered(area: Area2D) -> void:
 	workers.append(area)
-	
+	animate(true)
 	if area.age_group == Character.AgeGroup.ELDERLY:
 		has_elderly = true
 		area.production_value = 2
@@ -43,6 +48,12 @@ func _on_area_entered(area: Area2D) -> void:
 ## When leaving
 ## [param area] area
 func _on_area_exited(area: Area2D) -> void:
+	# Remove from array
+	var index: int = workers.find(area)
+	if not (index == -1):
+		workers.remove_at(index)
+	if workers.size() <= 0:
+		animate(false)
 	if area.age_group == Character.AgeGroup.ELDERLY:
 		check_age_groups()
 	if area.age_group == Character.AgeGroup.ADULT:
@@ -54,6 +65,20 @@ func _on_area_exited(area: Area2D) -> void:
 	area.facility = "null"
 	area.production_state_change(false)
 	#print(area.facility)
+
+
+## To animate and tween sprites
+func animate(enabled: bool) -> void:
+	if enabled:
+		for animation: AnimatedSprite2D in animations:
+			animation.play("default")
+			var tween: Tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+			tween.tween_property(animation, "modulate:a", 1, 1)
+	else:
+		for animation: AnimatedSprite2D in animations:
+			animation.stop()
+			var tween: Tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+			tween.tween_property(animation, "modulate:a", 0, 1)
 
 
 ## Check elderly or adult status
