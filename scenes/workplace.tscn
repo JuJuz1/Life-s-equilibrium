@@ -161,13 +161,14 @@ texture = ExtResource("2_wtg2p")
 
 [node name="Animations" type="Node2D" parent="."]
 editor_description = "https://ragnapixel.itch.io/particle-fx
-FREE"
+CC 4.0 (credit):
+Raphael Hatencia"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Animations"]
 modulate = Color(1, 1, 1, 0)
 position = Vector2(-49, -133)
 sprite_frames = SubResource("SpriteFrames_veiej")
-frame_progress = 0.861243
+frame_progress = 0.300562
 
 [node name="AnimatedSprite2D2" type="AnimatedSprite2D" parent="Animations"]
 modulate = Color(1, 1, 1, 0)
