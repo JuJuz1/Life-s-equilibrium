@@ -32,6 +32,7 @@ offset_bottom = 40.0
 script = ExtResource("3_pciue")
 
 [node name="EnergyBar" parent="Labels" instance=ExtResource("6_m3dqt")]
+layout_mode = 0
 offset_left = -34.0
 offset_top = -45.0
 offset_right = 30.0

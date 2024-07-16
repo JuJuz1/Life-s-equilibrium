@@ -14,8 +14,6 @@ config/name="Life's equilibrium"
 run/main_scene="res://scenes/world.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://graphics/faces/face_boy.png"
-config/macos_native_icon="res://graphics/faces/face_boy.png"
-config/windows_native_icon="res://graphics/faces/face_boy.png"
 
 [display]
 
