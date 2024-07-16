@@ -1,15 +1,18 @@
-[gd_scene load_steps=12 format=3 uid="uid://dcye3hshybkmc"]
+[gd_scene load_steps=15 format=3 uid="uid://dcye3hshybkmc"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_od65m"]
 [ext_resource type="PackedScene" uid="uid://dajefe25vpnrg" path="res://scenes/workplace.tscn" id="2_hpr3n"]
 [ext_resource type="Texture2D" uid="uid://b8wubrcjjmt51" path="res://graphics/dirt_road.png" id="2_psqal"]
 [ext_resource type="Script" path="res://scripts/ui.gd" id="3_18sc0"]
+[ext_resource type="Texture2D" uid="uid://d3j4ss6yy5f5k" path="res://graphics/bell.png" id="3_vcdat"]
 [ext_resource type="PackedScene" uid="uid://0as4s51phssd" path="res://scenes/recreation_zone.tscn" id="4_yo5hm"]
 [ext_resource type="PackedScene" uid="uid://bptbsaqreifkp" path="res://scenes/dormitory.tscn" id="5_8yo4u"]
 [ext_resource type="PackedScene" uid="uid://cawh8gfun1sjp" path="res://scenes/hospital.tscn" id="5_nj28b"]
 [ext_resource type="Material" uid="uid://xg6h5gdeg71v" path="res://materials/material_unshaded.tres" id="7_kptb1"]
 [ext_resource type="Texture2D" uid="uid://df1fjgx7us2wt" path="res://graphics/arrow.png" id="8_awgej"]
 [ext_resource type="AudioStream" uid="uid://c6gry6rctsmdd" path="res://audio/music.mp3" id="10_47fip"]
+[ext_resource type="AudioStream" uid="uid://dv1htoa82gn2i" path="res://audio/bell.mp3" id="11_l7ye5"]
+[ext_resource type="AudioStream" uid="uid://b5si086ih552e" path="res://audio/death.mp3" id="12_3gkyt"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1cqoc"]
 
@@ -36,11 +39,16 @@ position = Vector2(108, 373)
 rotation = 0.0167304
 texture = ExtResource("2_psqal")
 
+[node name="Bell" type="Sprite2D" parent="."]
+position = Vector2(26, 319)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("3_vcdat")
+
 [node name="Dormitory" parent="." instance=ExtResource("5_8yo4u")]
 position = Vector2(222, 526)
 
 [node name="Workplace" parent="." instance=ExtResource("2_hpr3n")]
-position = Vector2(252, 198)
+position = Vector2(269, 194)
 
 [node name="Hospital" parent="." instance=ExtResource("5_nj28b")]
 position = Vector2(960, 146)
@@ -59,19 +67,19 @@ script = ExtResource("3_18sc0")
 
 [node name="LabelProduction" type="Label" parent="UI"]
 layout_mode = 0
-offset_left = -12.0
-offset_top = -44.0
-offset_right = 92.0
-offset_bottom = 25.0
+offset_left = -2.0
+offset_top = -41.0
+offset_right = 102.0
+offset_bottom = 28.0
 theme_override_font_sizes/font_size = 50
 text = "0 / 5"
 
 [node name="LabelProductionInfo" type="Label" parent="UI"]
 layout_mode = 0
-offset_left = -91.0
-offset_top = -85.0
-offset_right = 301.0
-offset_bottom = -16.0
+offset_left = -81.0
+offset_top = -82.0
+offset_right = 311.0
+offset_bottom = -13.0
 theme_override_font_sizes/font_size = 40
 text = "Kaupungin tulot"
 
@@ -122,11 +130,21 @@ theme_override_font_sizes/font_size = 70
 text = "Koita liikuttaa hahmoa!"
 horizontal_alignment = 1
 
+[node name="LabelStart" type="Label" parent="UI"]
+material = ExtResource("7_kptb1")
+layout_mode = 0
+offset_left = -411.0
+offset_top = 74.0
+offset_right = 437.0
+offset_bottom = 198.0
+theme_override_font_sizes/font_size = 90
+text = "Elämän tasapaino..."
+
 [node name="SpriteArrow" type="Sprite2D" parent="UI"]
 modulate = Color(1, 1, 1, 0)
 material = ExtResource("7_kptb1")
-position = Vector2(-176, 354)
-rotation = 0.0859956
+position = Vector2(-210, 405)
+rotation = 0.275259
 scale = Vector2(1.63772, 1.63772)
 texture = ExtResource("8_awgej")
 
@@ -139,8 +157,17 @@ wait_time = 60.0
 [node name="AudioMusic" type="AudioStreamPlayer" parent="."]
 editor_description = "https://pixabay.com/fi/music/sarjakuvia-your-game-comedy-173310/
 
-Music by Oleksii Holubiev from Pixabay
-
-"
+Music by Oleksii Holubiev from Pixabay"
 stream = ExtResource("10_47fip")
 volume_db = -20.0
+
+[node name="AudioCharacterArrive" type="AudioStreamPlayer" parent="."]
+editor_description = "https://freesound.org/people/Zabuhailo/sounds/242409/
+CC 4.0"
+stream = ExtResource("11_l7ye5")
+volume_db = -4.0
+
+[node name="AudioCharacterDeath" type="AudioStreamPlayer" parent="."]
+editor_description = "https://freesound.org/people/punisherdan/sounds/444455/
+CC 0"
+stream = ExtResource("12_3gkyt")

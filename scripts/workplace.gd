@@ -12,11 +12,17 @@ var workers: Array[Area2D]
 @onready var animations: Array = $Animations.get_children()
 var tweening: bool = false
 
-@onready var audio_stream_player = $AudioStreamPlayer
+@onready var audio_stream_player1 = $AudioStreamPlayer
+@onready var audio_stream_player2 = $AudioStreamPlayer2
 
 ## When entering workplace
 ## [param area] area what enters, should always be a character
 func _on_area_entered(area: Area2D) -> void:
+	if not (audio_stream_player1.playing or audio_stream_player2.playing):
+		if randf_range(0, 1) < 0.5:
+			audio_stream_player1.play()
+		else:
+			audio_stream_player2.play()
 	workers.append(area)
 	animate(true)
 	if area.age_group == Character.AgeGroup.ELDERLY:

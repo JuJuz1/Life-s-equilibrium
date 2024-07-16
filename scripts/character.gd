@@ -98,7 +98,7 @@ var first_action: bool = true
 func _ready() -> void:
 	# TODO: testing
 	age = randi_range(15, 35)
-	#age = 5
+	#age = 90
 	labels.labels_update(age, energy)
 	
 	check_age_group()

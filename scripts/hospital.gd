@@ -6,6 +6,9 @@ extends Area2D
 ## When entering the hospital
 ## [param area] area what enters, should always be a character
 func _on_area_entered(area: Area2D) -> void:
+	if not audio_stream_player.playing:
+		audio_stream_player.play()
+	
 	area.facility = "hospital"
 	area.energy_change = 2
 	# Start timers and associated stuff in character script?

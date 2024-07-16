@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cawh8gfun1sjp"]
+[gd_scene load_steps=5 format=3 uid="uid://cawh8gfun1sjp"]
 
 [ext_resource type="Script" path="res://scripts/hospital.gd" id="1_ejoc2"]
 [ext_resource type="Texture2D" uid="uid://c7ab5hoco6iou" path="res://graphics/hospital.png" id="2_3p2px"]
+[ext_resource type="AudioStream" uid="uid://bgy13wp5se4nv" path="res://audio/heartbeatbeep.mp3" id="3_8ivpb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8q1r2"]
 size = Vector2(323, 222.5)
@@ -17,6 +18,10 @@ scale = Vector2(1.78553, 1.78553)
 texture = ExtResource("2_3p2px")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+editor_description = "https://freesound.org/people/b-train/sounds/410379/
+CC 0"
+stream = ExtResource("3_8ivpb")
+volume_db = -3.0
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_area_exited"]

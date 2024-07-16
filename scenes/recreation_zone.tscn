@@ -6,12 +6,13 @@
 [ext_resource type="AudioStream" uid="uid://b2j6g4xy4mlqe" path="res://audio/bird2.mp3" id="4_a2g7i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n05fw"]
-size = Vector2(497.5, 255.5)
+size = Vector2(463, 223)
 
 [node name="RecreationZone" type="Area2D"]
 script = ExtResource("1_txihd")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2.5, 3.5)
 shape = SubResource("RectangleShape2D_n05fw")
 
 [node name="Lake" type="Sprite2D" parent="."]
@@ -23,6 +24,7 @@ stream = ExtResource("3_5axjr")
 volume_db = 2.0
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+editor_description = "forest edge spring NL 1146AM 220414_0336.wav by klankbeeld -- https://freesound.org/s/629446/ -- License: Attribution 4.0"
 stream = ExtResource("4_a2g7i")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

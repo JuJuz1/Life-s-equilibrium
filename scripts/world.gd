@@ -41,6 +41,8 @@ var tutorial: bool = true
 
 ## Music starts playing after tutorial
 @onready var audio_music = $AudioMusic
+@onready var audio_character_arrive = $AudioCharacterArrive
+@onready var audio_character_death = $AudioCharacterDeath
 
 func _ready() -> void:
 	characters_preload.append(CHARACTER_BASE)
@@ -72,8 +74,9 @@ func start() -> void:
 	if started:
 		return
 	started = true
-	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
 	tween.tween_property($CanvasModulate, "color", Color(1, 1, 1, 1), 1)
+	tween.tween_property($UI/LabelStart, "modulate:a", 0, 1.5)
 	
 	# TODO: change amount
 	for i in 1:
@@ -125,7 +128,6 @@ func start() -> void:
 		character_first.material = null
 		)
 	
-	
 	for i in 2:
 		await get_tree().create_timer(2).timeout
 		character_new_spawn()
@@ -156,8 +158,13 @@ func character_new_spawn() -> void:
 	
 	add_child(character)
 	
+	# Audio
+	await get_tree().create_timer(1.7).timeout
+	if not audio_character_arrive.playing:
+		audio_character_arrive.play()
+	
 	# TODO: for door to change color with delay
-	await get_tree().create_timer(4).timeout
+	await get_tree().create_timer(2.3).timeout
 	# Make correct door green
 	$Dormitory.door_change(character.id, false)
 	
@@ -228,6 +235,9 @@ func _on_character_action_taken() -> void:
 ## When a character dies
 ## [param id] character's id
 func _on_character_death(id: int) -> void:
+	if not audio_character_death.playing:
+		audio_character_death.play()
+	
 	characters[id] = 0
 	# TODO: needs to be tested
 	production_limit = int(production_limit * 0.65)
@@ -239,6 +249,12 @@ func _on_character_death(id: int) -> void:
 		# Game lose
 		canvas_dim(true)
 		$UI.show_lose()
+		
+		# Audio
+		audio_music.play()
+		var tween_music: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween_music.tween_property(audio_music, "volume_db", -30, 7)
+		
 		await get_tree().create_timer(10).timeout
 		automatic_restart()
 
