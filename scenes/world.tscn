@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://dcye3hshybkmc"]
+[gd_scene load_steps=11 format=3 uid="uid://dcye3hshybkmc"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_od65m"]
 [ext_resource type="PackedScene" uid="uid://dajefe25vpnrg" path="res://scenes/workplace.tscn" id="2_hpr3n"]
+[ext_resource type="Texture2D" uid="uid://b8wubrcjjmt51" path="res://graphics/dirt_road.png" id="2_psqal"]
 [ext_resource type="Script" path="res://scripts/ui.gd" id="3_18sc0"]
 [ext_resource type="PackedScene" uid="uid://0as4s51phssd" path="res://scenes/recreation_zone.tscn" id="4_yo5hm"]
 [ext_resource type="PackedScene" uid="uid://bptbsaqreifkp" path="res://scenes/dormitory.tscn" id="5_8yo4u"]
@@ -25,6 +26,15 @@ offset_right = 2026.0
 offset_bottom = 1143.0
 texture = SubResource("CanvasTexture_1cqoc")
 
+[node name="DirtRoad" type="Sprite2D" parent="."]
+position = Vector2(109, 389)
+texture = ExtResource("2_psqal")
+
+[node name="DirtRoad2" type="Sprite2D" parent="."]
+position = Vector2(108, 373)
+rotation = 0.0167304
+texture = ExtResource("2_psqal")
+
 [node name="Dormitory" parent="." instance=ExtResource("5_8yo4u")]
 position = Vector2(222, 526)
 
@@ -32,10 +42,10 @@ position = Vector2(222, 526)
 position = Vector2(252, 198)
 
 [node name="Hospital" parent="." instance=ExtResource("5_nj28b")]
-position = Vector2(953, 147)
+position = Vector2(960, 146)
 
 [node name="RecreationZone" parent="." instance=ExtResource("4_yo5hm")]
-position = Vector2(860, 448)
+position = Vector2(872, 493)
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3

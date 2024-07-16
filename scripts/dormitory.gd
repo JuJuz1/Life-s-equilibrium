@@ -34,4 +34,4 @@ func door_change(id: int, character_death: bool) -> void:
 			sprite_door.texture = DOOR_RED
 		else:
 			sprite_door.texture = DOOR_GREEN
-		print_debug("DOOR " + str(id) +  " CHANGED")
+		#print_debug("DOOR " + str(id) +  " CHANGED")

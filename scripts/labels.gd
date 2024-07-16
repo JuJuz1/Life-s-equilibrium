@@ -7,7 +7,8 @@ var tween_running: bool = false
 ## [param age, energy] character's age and energy level
 func labels_update(age: int, energy: int) -> void:
 	$LabelAge.text = str(age)
-	$LabelEnergy.text = str(energy) + "/100"
+	$LabelEnergy.text = str(energy) + "/100" # TODO
+	$EnergyBar.value = energy
 
 
 ## Show a message giving information about a character's state

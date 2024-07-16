@@ -22,9 +22,9 @@ var characters_preload: Array[PackedScene]
 ## Save canvasmodulate tint
 var canvas_tint: Color
 
-## Timer to automatically restart the game if no action (not moving a character) has been taken for 1,5 minute
+## Timer to automatically restart the game if no action (not moving a character) has been taken for 1 minute
 @onready var timer_restart: Timer = $TimerRestart
-const TIMER_RESTART_TIME: int = 90
+const TIMER_RESTART_TIME: int = 60
 
 ## Production of the town and limit when a new character arrives
 var production: int = 0
@@ -135,7 +135,8 @@ func character_new_spawn() -> void:
 	
 	# Find the first slot that doesn't contain a character reference
 	# Assign to the array and assing an id based on the position in the array
-	for i in characters.size() - 1:
+	for i in characters.size():
+		#print(characters[i])
 		if characters[i] is not Character:
 			characters[i] = character
 			character.id = i
@@ -162,7 +163,7 @@ func character_new_spawn() -> void:
 ## [returns count] the amount of characters alive
 func characters_amount() -> int:
 	var count: int = 0
-	for i in characters.size() - 1:
+	for i in characters.size():
 		if characters[i] is Character:
 			count += 1
 	return count
@@ -217,7 +218,7 @@ func _on_character_action_taken() -> void:
 func _on_character_death(id: int) -> void:
 	characters[id] = 0
 	# TODO: needs to be tested
-	production_limit = int(production_limit * 0.7)
+	production_limit = int(production_limit * 0.65)
 	$UI.update_label(production, production_limit)
 	# Make correct door red
 	$Dormitory.door_change(id, true)
@@ -235,11 +236,11 @@ func _on_character_death(id: int) -> void:
 ## [param value] value that is added to the total
 func _on_character_production(value: int) -> void:
 	production += value
-	print("PRODUCTION LIMIT: " + str(production_limit))
+	#print("PRODUCTION LIMIT: " + str(production_limit))
 	if production >= production_limit:
-		production_limit += int(production * 0.8) #lerp(production, production + production_limit, 1)
+		production_limit += int(production_limit * 0.8) #lerp(production, production + production_limit, 1)
 		character_new_spawn()
-		print("NEW PRODUCTION LIMIT: " + str(production_limit))
+		#print("NEW PRODUCTION LIMIT: " + str(production_limit))
 	#print("PRODUCTION: " + str(production))
 	$UI.update_label(production, production_limit)
 

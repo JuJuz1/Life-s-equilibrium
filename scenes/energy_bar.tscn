@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://bkashxdmk1mdx"]
+
+[ext_resource type="Texture2D" uid="uid://bdh0wfxwdd3sv" path="res://graphics/energy_bar_frame.png" id="1_t8kbn"]
+
+[sub_resource type="Gradient" id="Gradient_yathq"]
+offsets = PackedFloat32Array(0, 0.320896, 0.529851, 0.664179, 0.828358, 1)
+colors = PackedColorArray(0.721215, 0.189967, 0.183349, 1, 0.927701, 0.591981, 0.439288, 1, 0.742407, 0.732935, 0.389741, 1, 0.624236, 0.681404, 0.247695, 1, 0.526972, 0.688935, 0.24457, 1, 0.29676, 0.891694, 0.338612, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_5t33w"]
+gradient = SubResource("Gradient_yathq")
+height = 12
+use_hdr = true
+fill_from = Vector2(0, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[node name="EnergyBar" type="TextureProgressBar"]
+offset_right = 64.0
+offset_bottom = 12.0
+value = 100.0
+texture_over = ExtResource("1_t8kbn")
+texture_progress = SubResource("GradientTexture2D_5t33w")

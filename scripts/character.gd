@@ -109,7 +109,7 @@ func _ready() -> void:
 	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_LINEAR)
 	# TODO: tweak
 	# Audio
-	tween.tween_property(self, "position:x", position.x + randi_range(400, 450), 2)
+	tween.tween_property(self, "position:x", position.x + randi_range(380, 420), 2)
 	tween.tween_property(self, "position:y", position.y + randi_range(140, 200), 1)
 	tween.finished.connect(func() -> void:
 		await get_tree().create_timer(1).timeout
@@ -201,8 +201,8 @@ func sickness_check() -> void:
 	
 	var random = randf_range(0, 1)
 	var age_probability: float = float(age) / 100
-	print("RANDOM: " + str(random))
-	print("AGE PROBABILITY: " + str(age_probability))
+	#print("RANDOM: " + str(random))
+	#print("AGE PROBABILITY: " + str(age_probability))
 	
 	# If not inside hospital -> gets sickness more often and higher chance to die to sickness
 	# Else -> lower chance to get sick, lower chance to die and small chance to cure
@@ -217,13 +217,13 @@ func sickness_check() -> void:
 				return
 		else:
 			if facility == "recreation_zone":
-				if random < age_probability - 0.3: # ex. 60 -> 30%
+				if random < age_probability - 0.5: # ex. 60 -> 10%
 					sickness = true
-					print_debug("sick")
+					#print_debug("sick")
 			else:
 				if random < age_probability - 0.2: # example: if age is 60 -> 40%, if age_probability > 1.2 -> always sick (age > 120)
 					sickness = true
-					print_debug("sick")
+					#print_debug("sick")
 	
 	# Inside hospital
 	else:
@@ -233,16 +233,15 @@ func sickness_check() -> void:
 				return
 			elif random > age_probability - 0.2: # ex. 20 -> 100%, 60 -> 60%, 100 -> 20%
 				sickness = false
-				print_debug("cured")
+				#print_debug("cured")
 		else:
 			if random < age_probability * 0.5: # Half of age ex. 60 -> 30%
 				sickness = true
-				print_debug("sick")
+				#print_debug("sick")
 	
 	# If character gets sick or already was sick
 	if sickness:
 		if not was_sick: # If character gets sick
-			# TODO: for testing
 			$Sprite2D.texture = faces[2]
 			labels.state_label_show(sickness_messages.pick_random())
 		else: # If character was already sick
@@ -260,7 +259,7 @@ func sickness_check() -> void:
 
 ## When character dies to sickness
 func _death() -> void:
-		print("death")
+		#print("death")
 		labels.state_label_show(death_message)
 		# TODO: comment in :D
 		death.emit(id)

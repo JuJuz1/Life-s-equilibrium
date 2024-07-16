@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://c40gaik3lem0x"]
+[gd_scene load_steps=8 format=3 uid="uid://c40gaik3lem0x"]
 
 [ext_resource type="Script" path="res://scripts/character.gd" id="1_1kqu2"]
 [ext_resource type="Texture2D" uid="uid://bed5r2shxtyfo" path="res://graphics/faces/face_girl.png" id="2_xl5pp"]
 [ext_resource type="Script" path="res://scripts/labels.gd" id="3_1sc7f"]
 [ext_resource type="Texture2D" uid="uid://cuqrvi8ljos1e" path="res://graphics/faces/face_girl_energy_low.png" id="3_8xhld"]
 [ext_resource type="Texture2D" uid="uid://bg0swrxmrkier" path="res://graphics/faces/face_girl_sick.png" id="4_s5yy4"]
+[ext_resource type="PackedScene" uid="uid://bkashxdmk1mdx" path="res://scenes/energy_bar.tscn" id="6_lypp8"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_layby"]
 radius = 31.257
@@ -30,6 +31,12 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("3_1sc7f")
 
+[node name="EnergyBar" parent="Labels" instance=ExtResource("6_lypp8")]
+offset_left = -34.0
+offset_top = -45.0
+offset_right = 30.0
+offset_bottom = -33.0
+
 [node name="LabelAge" type="Label" parent="Labels"]
 layout_mode = 0
 offset_left = -12.0
@@ -41,11 +48,13 @@ theme_override_font_sizes/font_size = 25
 text = "0"
 
 [node name="LabelEnergy" type="Label" parent="Labels"]
+visible = false
 layout_mode = 0
 offset_left = -26.0
 offset_top = -52.0
 offset_right = 30.0
 offset_bottom = -29.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "0/100"
 
 [node name="LabelState" type="Label" parent="Labels"]
@@ -58,6 +67,7 @@ offset_top = -91.0
 offset_right = 279.0
 offset_bottom = -89.0
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 25
 horizontal_alignment = 1
 
