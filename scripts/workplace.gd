@@ -12,6 +12,8 @@ var workers: Array[Area2D]
 @onready var animations: Array = $Animations.get_children()
 var tweening: bool = false
 
+@onready var audio_stream_player = $AudioStreamPlayer
+
 ## When entering workplace
 ## [param area] area what enters, should always be a character
 func _on_area_entered(area: Area2D) -> void:

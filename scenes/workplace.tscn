@@ -188,5 +188,7 @@ position = Vector2(146, -201)
 sprite_frames = SubResource("SpriteFrames_veiej")
 frame_progress = 0.731534
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_area_exited"]

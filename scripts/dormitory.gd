@@ -5,6 +5,8 @@ extends Area2D
 const DOOR_GREEN: CompressedTexture2D = preload("res://graphics/door_green.png")
 const DOOR_RED: CompressedTexture2D = preload("res://graphics/door_red.png")
 
+@onready var audio_stream_player = $AudioStreamPlayer
+
 ## When entering the dormitory
 ## [param area] area what enters, should always be a character
 func _on_area_entered(area: Area2D) -> void:

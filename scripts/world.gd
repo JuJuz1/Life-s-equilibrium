@@ -11,7 +11,7 @@ const CHARACTER_GIRL_2 = preload("res://scenes/character_girl2.tscn")
 const CHARACTER_GIRL = preload("res://scenes/character_girl.tscn")
 
 ## Unshaded material
-const MATERIAL_UNSHADED = preload("res://material_unshaded.tres")
+const MATERIAL_UNSHADED = preload("res://materials/material_unshaded.tres")
 
 ## All preloaded characters
 var characters_preload: Array[PackedScene]
@@ -38,6 +38,9 @@ var characters: Array = Array()
 var started: bool = false
 ## When a small tutorial is ongoing
 var tutorial: bool = true
+
+## Music starts playing after tutorial
+@onready var audio_music = $AudioMusic
 
 func _ready() -> void:
 	characters_preload.append(CHARACTER_BASE)
@@ -98,8 +101,17 @@ func start() -> void:
 	tween_arrow.stop()
 	tween_character.stop()
 	
-	await get_tree().create_timer(2).timeout
+	await get_tree().create_timer(1).timeout
+	
+	# Audio
+	audio_music.play()
+	var tween_music: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween_music.tween_property(audio_music, "volume_db", 0, 2)
+	
+	await get_tree().create_timer(1).timeout
 	canvas_dim(false)
+	
+	
 	tween_arrow = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween_arrow.tween_property($UI/SpriteArrow, "modulate:a", 0, 1)
 	tween_arrow.finished.connect(func() -> void:

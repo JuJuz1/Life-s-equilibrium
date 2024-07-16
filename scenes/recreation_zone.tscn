@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://0as4s51phssd"]
+[gd_scene load_steps=6 format=3 uid="uid://0as4s51phssd"]
 
 [ext_resource type="Script" path="res://scripts/recreation_zone.gd" id="1_txihd"]
 [ext_resource type="Texture2D" uid="uid://d3pn31oagab43" path="res://graphics/lake.png" id="2_4ct64"]
+[ext_resource type="AudioStream" uid="uid://cylxag0wg4x43" path="res://audio/bird.mp3" id="3_5axjr"]
+[ext_resource type="AudioStream" uid="uid://b2j6g4xy4mlqe" path="res://audio/bird2.mp3" id="4_a2g7i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_n05fw"]
 size = Vector2(497.5, 255.5)
@@ -14,6 +16,14 @@ shape = SubResource("RectangleShape2D_n05fw")
 
 [node name="Lake" type="Sprite2D" parent="."]
 texture = ExtResource("2_4ct64")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+editor_description = "forest edge spring NL 1146AM 220414_0336.wav by klankbeeld -- https://freesound.org/s/629446/ -- License: Attribution 4.0"
+stream = ExtResource("3_5axjr")
+volume_db = 2.0
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_a2g7i")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_area_exited"]

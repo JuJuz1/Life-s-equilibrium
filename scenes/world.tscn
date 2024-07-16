@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dcye3hshybkmc"]
+[gd_scene load_steps=12 format=3 uid="uid://dcye3hshybkmc"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_od65m"]
 [ext_resource type="PackedScene" uid="uid://dajefe25vpnrg" path="res://scenes/workplace.tscn" id="2_hpr3n"]
@@ -7,8 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://0as4s51phssd" path="res://scenes/recreation_zone.tscn" id="4_yo5hm"]
 [ext_resource type="PackedScene" uid="uid://bptbsaqreifkp" path="res://scenes/dormitory.tscn" id="5_8yo4u"]
 [ext_resource type="PackedScene" uid="uid://cawh8gfun1sjp" path="res://scenes/hospital.tscn" id="5_nj28b"]
-[ext_resource type="Material" uid="uid://xg6h5gdeg71v" path="res://material_unshaded.tres" id="7_kptb1"]
+[ext_resource type="Material" uid="uid://xg6h5gdeg71v" path="res://materials/material_unshaded.tres" id="7_kptb1"]
 [ext_resource type="Texture2D" uid="uid://df1fjgx7us2wt" path="res://graphics/arrow.png" id="8_awgej"]
+[ext_resource type="AudioStream" uid="uid://c6gry6rctsmdd" path="res://audio/music.mp3" id="10_47fip"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1cqoc"]
 
@@ -134,3 +135,12 @@ position = Vector2(-179, 379)
 
 [node name="TimerRestart" type="Timer" parent="."]
 wait_time = 60.0
+
+[node name="AudioMusic" type="AudioStreamPlayer" parent="."]
+editor_description = "https://pixabay.com/fi/music/sarjakuvia-your-game-comedy-173310/
+
+Music by Oleksii Holubiev from Pixabay
+
+"
+stream = ExtResource("10_47fip")
+volume_db = -20.0
