@@ -90,6 +90,7 @@ wait_time = 3.0
 wait_time = 5.0
 
 [node name="TimerSickness" type="Timer" parent="."]
+wait_time = 10.0
 
 [connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
 [connection signal="button_up" from="Button" to="." method="_on_button_button_up"]

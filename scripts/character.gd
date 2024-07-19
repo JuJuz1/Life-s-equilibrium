@@ -58,6 +58,8 @@ var dragging: bool = false
 var offset: Vector2 = Vector2.ZERO
 ## Used to determine when tweening/animating anything to prevent user action
 var input_prevent: bool = false
+## When action taken first time, used to start timers and day-night cycle operation
+var first_action: bool = true
 
 ## Attributes
 var id: int
@@ -92,9 +94,6 @@ var production_value: int = 2
 @onready var timer_sickness: Timer = $TimerSickness
 const TIMER_SICKNESS_TIMEOUT: int = 10 # TODO: change?
 
-## When action taken first time, used to start timers
-var first_action: bool = true
-
 func _ready() -> void:
 	# TODO: testing
 	age = randi_range(15, 35)
@@ -102,6 +101,8 @@ func _ready() -> void:
 	labels.labels_update(age, energy)
 	
 	check_age_group()
+	
+	timers_initialize()
 	
 	# To prevent input
 	input_prevent = true
@@ -117,21 +118,38 @@ func _ready() -> void:
 		)
 
 
-## Start all timers
-func timers_start() -> void:
+## Initialize timers
+func timers_initialize() -> void:
 	timer_age.timeout.connect(age_add)
 	timer_age.wait_time = TIMER_AGE_TIMEOUT
-	timer_age.start()
 	
 	timer_energy.timeout.connect(energy_amend)
 	timer_energy.wait_time = TIMER_ENERGY_TIMEOUT
-	timer_energy.start()
 	
 	timer_production.timeout.connect(produce)
 	timer_production.wait_time = TIMER_PRODUCTION_TIMEOUT
 	
 	timer_sickness.timeout.connect(sickness_check)
 	timer_sickness.wait_time = TIMER_SICKNESS_TIMEOUT
+
+
+## Start all timers
+## [param enabled] whether or not the timers will be started or stopped
+func timers_state_change(enabled: bool) -> void:
+	print_debug("TIMERS: " + str(enabled))
+	if not enabled:
+		# for timer in get_children()
+		# 	if timer is Timer:
+		# 		timer.start()
+		timer_age.stop()
+		timer_energy.stop()
+		# timer_production.stop() controlled by different method
+		timer_sickness.stop()
+		return
+	
+	timer_age.start()
+	timer_energy.start()
+	# timer_production.start()
 	timer_sickness.start()
 
 
@@ -304,7 +322,7 @@ func _on_button_button_down() -> void:
 	# Start the timers once action taken the first time
 	if first_action:
 		first_action = false
-		timers_start()
+		timers_state_change(true)
 	
 	dragging = true
 	offset = get_global_mouse_position() - position

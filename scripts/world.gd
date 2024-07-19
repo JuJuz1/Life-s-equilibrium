@@ -188,25 +188,57 @@ func characters_amount() -> int:
 	return count
 
 
+## When night comes, and morning arrives
 func night() -> void:
 	# TODO: testing needed
-	return
+	#return
 	
-	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-	var characters_all = get_children()
-	for character in characters_all:
-		if character is Character:
+	var characters_positions: Array = Array()
+	characters_positions.resize(15)
+	characters_positions.fill(0)
+	
+	var tween_info: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	$UI/LabelInfo.text = "Yö saapuu..."
+	tween_info.tween_property($UI/LabelInfo, "modulate:a", 1, 1.5)
+	
+	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
+	for i in characters.size():
+		if characters[i] is Character:
+			var character: Character = characters[i]
+			# Doesn't affect arriving characters or characters that have not yet moved
+			if character.input_prevent or character.first_action:
+				continue
 			character.input_prevent = true
-			tween.tween_property(character, "position", $Dormitory.global_position, 1)
+			character.timers_state_change(false)
+			# Save position
+			characters_positions[i] = character.global_position
+			tween.tween_property(character, "global_position", Vector2($Dormitory.global_position.x + randi_range(-100, 100),
+				$Dormitory.global_position.y + randi_range(-50, 50)), 1.5)
 	
 	canvas_dim(true)
-	await get_tree().create_timer(5).timeout
+	await get_tree().create_timer(7).timeout
 	
-	tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-	for character in characters_all:
-		if character is Character:
-			character.input_prevent = false
-	canvas_dim(false)
+	var tween_out: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
+	for i in characters.size():
+		if characters[i] is Character:
+			var character: Character = characters[i]
+			# Doesn't affect arriving characters or characters that have not yet moved
+			if character.first_action:
+				continue
+			print(i)
+			# Bring back to previous position
+			tween_out.tween_property(character, "global_position", characters_positions[i], 1.5)
+			tween_out.finished.connect(func() -> void:
+				character.input_prevent = false
+				character.timers_state_change(true)
+				)
+	
+	tween_info = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	$UI/LabelInfo.text = "Aamu saapuu..."
+	tween_info.tween_property($UI/LabelInfo, "modulate:a", 0, 1.5)
+	tween_info.finished.connect(func() -> void: 
+		canvas_dim(false)
+		)
 
 
 ## Dims the canvasmodulate
