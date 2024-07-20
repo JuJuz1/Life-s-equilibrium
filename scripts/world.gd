@@ -3,6 +3,7 @@ extends Node2D
 
 ## Signals
 signal tutorial_over ## To know when tutorial is over
+signal night_finished ## To know when night is over
 
 ## Preload characters
 const CHARACTER_BASE = preload("res://scenes/character_base.tscn")
@@ -25,6 +26,12 @@ var canvas_tint: Color
 ## Timer to automatically restart the game if no action (not moving a character) has been taken for 1 minute
 @onready var timer_restart: Timer = $TimerRestart
 const TIMER_RESTART_TIME: int = 60
+
+## Day-night cycle
+@onready var timer_cycle = $TimerCycle
+const TIMER_CYCLE_TIME: int = 15
+var dims_left: int = 3
+const DIM_AMOUNT: Color = Color(0.27, 0.27, 0.27, 0)
 
 ## Production of the town and limit when a new character arrives
 var production: int = 0
@@ -63,9 +70,9 @@ func _unhandled_input(event) -> void:
 	if event.is_action_pressed("quit"):
 		get_tree().quit()
 	if event.is_action_pressed("click"):
-		if started:
-			night()
-			return
+		#if started:
+			#night()
+			#return
 		start()
 
 
@@ -135,6 +142,10 @@ func start() -> void:
 	timer_restart.timeout.connect(automatic_restart)
 	timer_restart.wait_time = TIMER_RESTART_TIME
 	timer_restart.start()
+	
+	timer_cycle.timeout.connect(canvas_dim_cycle)
+	timer_cycle.wait_time = TIMER_CYCLE_TIME
+	timer_cycle.start()
 
 
 ## Spawns a new character
@@ -205,27 +216,36 @@ func night() -> void:
 	for i in characters.size():
 		if characters[i] is Character:
 			var character: Character = characters[i]
+			# Save position
+			characters_positions[i] = character.global_position
 			# Doesn't affect arriving characters or characters that have not yet moved
 			if character.input_prevent or character.first_action:
+				character.input_prevent = true
 				continue
 			character.input_prevent = true
 			character.timers_state_change(false)
-			# Save position
-			characters_positions[i] = character.global_position
 			tween.tween_property(character, "global_position", Vector2($Dormitory.global_position.x + randi_range(-100, 100),
 				$Dormitory.global_position.y + randi_range(-50, 50)), 1.5)
 	
 	canvas_dim(true)
+	# TODO: AUDIO
 	await get_tree().create_timer(7).timeout
 	
+	tween_info = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	$UI/LabelInfo.text = "Aamu sarastaa..."
+	tween_info.tween_property($UI/LabelInfo, "modulate:a", 0, 3)
+	
+	await get_tree().create_timer(1.5).timeout
+	
+	canvas_dim(false)
 	var tween_out: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
 	for i in characters.size():
 		if characters[i] is Character:
 			var character: Character = characters[i]
 			# Doesn't affect arriving characters or characters that have not yet moved
 			if character.first_action:
+				character.input_prevent = false
 				continue
-			print(i)
 			# Bring back to previous position
 			tween_out.tween_property(character, "global_position", characters_positions[i], 1.5)
 			tween_out.finished.connect(func() -> void:
@@ -233,12 +253,9 @@ func night() -> void:
 				character.timers_state_change(true)
 				)
 	
-	tween_info = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-	$UI/LabelInfo.text = "Aamu saapuu..."
-	tween_info.tween_property($UI/LabelInfo, "modulate:a", 0, 1.5)
-	tween_info.finished.connect(func() -> void: 
-		canvas_dim(false)
-		)
+	await get_tree().create_timer(1.5).timeout
+	night_finished.emit()
+	print("NIGHT FINISHED")
 
 
 ## Dims the canvasmodulate
@@ -249,6 +266,24 @@ func canvas_dim(enabled: bool) -> void:
 		tween.tween_property($CanvasModulate, "color", canvas_tint, 1)
 	else:
 		tween.tween_property($CanvasModulate, "color", Color(1, 1, 1, 1), 1)
+
+
+## Dims canvas by a small amount, when dimmed 3 times -> night
+func canvas_dim_cycle() -> void:
+	var canvas_color: Color = $CanvasModulate.color
+	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
+	tween.tween_property($CanvasModulate, "color", canvas_color - DIM_AMOUNT, 1)
+	#tween.tween_property($CanvasModulate, "color:g", $CanvasModulate.color.g8 - DIM_AMOUNT.g, 1)
+	#tween.tween_property($CanvasModulate, "color:b", $CanvasModulate.color.b8 - DIM_AMOUNT.b, 1)
+	dims_left -= 1
+	print("DIMS LEFT: " + str(dims_left))
+	if dims_left <= 0:
+		dims_left = 3
+		timer_cycle.stop()
+		night()
+		await night_finished
+		await get_tree().create_timer(1).timeout
+		timer_cycle.start()
 
 
 ## Restart the timer to restart the game
@@ -272,7 +307,7 @@ func _on_character_death(id: int) -> void:
 	
 	characters[id] = 0
 	# TODO: needs to be tested
-	production_limit = int(production_limit * 0.65)
+	production_limit = int(production_limit * 0.6)
 	$UI.update_label(production, production_limit)
 	# Make correct door red
 	$Dormitory.door_change(id, true)
@@ -283,7 +318,6 @@ func _on_character_death(id: int) -> void:
 		$UI.show_lose()
 		
 		# Audio
-		audio_music.play()
 		var tween_music: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween_music.tween_property(audio_music, "volume_db", -30, 7)
 		

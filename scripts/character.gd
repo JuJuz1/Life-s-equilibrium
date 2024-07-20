@@ -101,15 +101,12 @@ func _ready() -> void:
 	labels.labels_update(age, energy)
 	
 	check_age_group()
-	
 	timers_initialize()
 	
 	# To prevent input
 	input_prevent = true
 	await get_tree().create_timer(1).timeout
 	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_LINEAR)
-	# TODO: tweak
-	# Audio
 	tween.tween_property(self, "position:x", position.x + randi_range(380, 420), 2)
 	tween.tween_property(self, "position:y", position.y + randi_range(140, 200), 1)
 	tween.finished.connect(func() -> void:
@@ -136,7 +133,7 @@ func timers_initialize() -> void:
 ## Start all timers
 ## [param enabled] whether or not the timers will be started or stopped
 func timers_state_change(enabled: bool) -> void:
-	print_debug("TIMERS: " + str(enabled))
+	#print_debug("TIMERS: " + str(enabled))
 	if not enabled:
 		# for timer in get_children()
 		# 	if timer is Timer:
