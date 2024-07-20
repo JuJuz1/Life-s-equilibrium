@@ -47,6 +47,7 @@ var tutorial: bool = true
 @onready var audio_music = $AudioMusic
 @onready var audio_character_arrive = $AudioCharacterArrive
 @onready var audio_character_death = $AudioCharacterDeath
+@onready var audio_morning = $AudioMorning
 
 func _ready() -> void:
 	characters_preload.append(CHARACTER_BASE)
@@ -205,9 +206,10 @@ func night() -> void:
 	characters_positions.resize(15)
 	characters_positions.fill(0)
 	
-	var tween_info: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	var tween_info: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
 	$UI/LabelInfo.text = "Yö saapuu..."
 	tween_info.tween_property($UI/LabelInfo, "modulate:a", 1, 1.5)
+	tween_info.tween_property(audio_music, "volume_db", audio_music.volume_db - 10, 3)
 	
 	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
 	for i in characters.size():
@@ -225,16 +227,26 @@ func night() -> void:
 				$Dormitory.global_position.y + randi_range(-50, 50)), 1.5)
 	
 	canvas_dim(true)
-	# TODO: AUDIO
-	await get_tree().create_timer(7).timeout
 	
+	await get_tree().create_timer(3).timeout
+	tween_info = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween_info.tween_property($UI/LabelInfo, "modulate:a", 0, 2)
+	
+	await get_tree().create_timer(2).timeout
 	tween_info = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	$UI/LabelInfo.text = "Aamu sarastaa..."
-	tween_info.tween_property($UI/LabelInfo, "modulate:a", 0, 3)
+	tween_info.tween_property($UI/LabelInfo, "modulate:a", 1, 2)
+	
+	await get_tree().create_timer(2).timeout
+	audio_morning.play()
+	
+	tween_info = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
+	tween_info.tween_property($UI/LabelInfo, "modulate:a", 0, 4)
+	tween_info.tween_property(audio_music, "volume_db", audio_music.volume_db + 10, 3)
 	
 	await get_tree().create_timer(1.5).timeout
-	
 	canvas_dim(false)
+	
 	var tween_out: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
 	for i in characters.size():
 		if characters[i] is Character:
@@ -249,6 +261,7 @@ func night() -> void:
 			# Bring back to previous position
 			tween_out.tween_property(character, "global_position", characters_positions[i], 1.5)
 			tween_out.finished.connect(func() -> void:
+				character.energy_amend(20)
 				character.input_prevent = false
 				character.timers_state_change(true)
 				)
@@ -267,7 +280,7 @@ func canvas_dim(enabled: bool) -> void:
 		tween.tween_property($CanvasModulate, "color", Color(1, 1, 1, 1), 1)
 
 
-## Dims canvas by a small amount, when dimmed 3 times -> night
+## Day night cycle
 func canvas_dim_cycle() -> void:
 	timer_cycle.stop()
 	await night()

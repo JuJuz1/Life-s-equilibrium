@@ -170,20 +170,22 @@ func check_age_group() -> void:
 
 
 ## Changes to energy levels, dependent on the facility
-func energy_amend() -> void:
-	energy += energy_change
+## [param _energy] if added via night cycle, otherwise uses default energy_change
+func energy_amend(_energy: int = 0) -> void:
+	var change: int
+	if _energy == 0:
+		change = energy_change
+	else:
+		change = _energy
+	energy = clamp(energy + change, 0, 100)
 	# "afk"
 	if (facility == "dormitory" or facility == "null") and not sickness:
 		labels.state_label_show(nothing_to_do_messages)
 	# Recreation
-	if energy_change > 0 and energy < 100 and facility == "recreation_zone" and not sickness:
+	if energy < 100 and facility == "recreation_zone" and not sickness:
 		labels.state_label_show(recreation_messages[0])
-	if energy >= 100:
-		if not sickness:
-			labels.state_label_show(recreation_messages[1])
-		energy = 100
-	if energy < 0:
-		energy = 0
+	if energy == 100 and not sickness:
+		labels.state_label_show(recreation_messages[1])
 	# TODO: for testing
 	if energy < ENERGY_LOW:
 		if not sickness:

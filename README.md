@@ -13,3 +13,5 @@ https://freesound.org/people/Gammelsmurfen778/sounds/474005/
 Recreation zone: https://freesound.org/people/klankbeeld/sounds/629446/
 
 Hospital: https://freesound.org/people/b-train/sounds/410379/
+
+Rooster (morning): https://freesound.org/people/Tempouser/sounds/162851/? By: Tempouser
