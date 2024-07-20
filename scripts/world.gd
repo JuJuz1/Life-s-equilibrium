@@ -3,7 +3,6 @@ extends Node2D
 
 ## Signals
 signal tutorial_over ## To know when tutorial is over
-signal night_finished ## To know when night is over
 
 ## Preload characters
 const CHARACTER_BASE = preload("res://scenes/character_base.tscn")
@@ -29,16 +28,14 @@ const TIMER_RESTART_TIME: int = 60
 
 ## Day-night cycle
 @onready var timer_cycle = $TimerCycle
-const TIMER_CYCLE_TIME: int = 15
-var dims_left: int = 3
-const DIM_AMOUNT: Color = Color(0.27, 0.27, 0.27, 0)
+const TIMER_CYCLE_TIME: int = 30 #TODO
 
 ## Production of the town and limit when a new character arrives
 var production: int = 0
 var production_limit: int = 5
 
 ## Array to hold character references throughout the game, useful for all operations considering characters
-## Determines which doors are colored green and which are red
+## Determines which doors are colored green and which are red, as well as a lot more
 var characters: Array = Array()
 
 ## Used when starting game
@@ -246,6 +243,9 @@ func night() -> void:
 			if character.first_action:
 				character.input_prevent = false
 				continue
+			# Check if position was saved to prevent moving errors
+			if not (typeof(characters_positions[i]) == TYPE_VECTOR2):
+				continue
 			# Bring back to previous position
 			tween_out.tween_property(character, "global_position", characters_positions[i], 1.5)
 			tween_out.finished.connect(func() -> void:
@@ -254,7 +254,6 @@ func night() -> void:
 				)
 	
 	await get_tree().create_timer(1.5).timeout
-	night_finished.emit()
 	print("NIGHT FINISHED")
 
 
@@ -270,20 +269,10 @@ func canvas_dim(enabled: bool) -> void:
 
 ## Dims canvas by a small amount, when dimmed 3 times -> night
 func canvas_dim_cycle() -> void:
-	var canvas_color: Color = $CanvasModulate.color
-	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
-	tween.tween_property($CanvasModulate, "color", canvas_color - DIM_AMOUNT, 1)
-	#tween.tween_property($CanvasModulate, "color:g", $CanvasModulate.color.g8 - DIM_AMOUNT.g, 1)
-	#tween.tween_property($CanvasModulate, "color:b", $CanvasModulate.color.b8 - DIM_AMOUNT.b, 1)
-	dims_left -= 1
-	print("DIMS LEFT: " + str(dims_left))
-	if dims_left <= 0:
-		dims_left = 3
-		timer_cycle.stop()
-		night()
-		await night_finished
-		await get_tree().create_timer(1).timeout
-		timer_cycle.start()
+	timer_cycle.stop()
+	await night()
+	await get_tree().create_timer(1).timeout
+	timer_cycle.start()
 
 
 ## Restart the timer to restart the game

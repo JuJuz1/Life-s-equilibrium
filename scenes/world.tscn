@@ -155,7 +155,7 @@ position = Vector2(-179, 379)
 wait_time = 60.0
 
 [node name="TimerCycle" type="Timer" parent="."]
-wait_time = 15.0
+wait_time = 30.0
 
 [node name="AudioMusic" type="AudioStreamPlayer" parent="."]
 editor_description = "https://pixabay.com/fi/music/sarjakuvia-your-game-comedy-173310/
