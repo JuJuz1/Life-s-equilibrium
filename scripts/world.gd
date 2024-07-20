@@ -28,7 +28,7 @@ const TIMER_RESTART_TIME: int = 60
 
 ## Day-night cycle
 @onready var timer_cycle = $TimerCycle
-const TIMER_CYCLE_TIME: int = 30 #TODO
+const TIMER_CYCLE_TIME: int = 45 # TODO
 
 ## Production of the town and limit when a new character arrives
 var production: int = 0
@@ -108,17 +108,15 @@ func start() -> void:
 	await tutorial_over
 	tween_arrow.stop()
 	tween_character.stop()
-	
 	await get_tree().create_timer(1).timeout
 	
 	# Audio
 	audio_music.play()
 	var tween_music: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween_music.tween_property(audio_music, "volume_db", 0, 2)
-	
 	await get_tree().create_timer(1).timeout
-	canvas_dim(false)
 	
+	canvas_dim(false)
 	
 	tween_arrow = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween_arrow.tween_property($UI/SpriteArrow, "modulate:a", 0, 1)
@@ -133,7 +131,7 @@ func start() -> void:
 		character_first.material = null
 		)
 	
-	for i in 2:
+	for i in 3:
 		await get_tree().create_timer(2).timeout
 		character_new_spawn()
 	
@@ -261,12 +259,13 @@ func night() -> void:
 			# Bring back to previous position
 			tween_out.tween_property(character, "global_position", characters_positions[i], 1.5)
 			tween_out.finished.connect(func() -> void:
-				character.energy_amend(20)
 				character.input_prevent = false
 				character.timers_state_change(true)
+				await get_tree().create_timer(0.5).timeout
+				character.energy_amend(15)
 				)
 	
-	await get_tree().create_timer(1.5).timeout
+	await get_tree().create_timer(1).timeout
 	print("NIGHT FINISHED")
 
 
@@ -334,7 +333,7 @@ func _on_character_production(value: int) -> void:
 	production += value
 	#print("PRODUCTION LIMIT: " + str(production_limit))
 	if production >= production_limit:
-		production_limit += int(production_limit * 0.8) #lerp(production, production + production_limit, 1)
+		production_limit += int(production_limit * 0.75) #lerp(production, production + production_limit, 1)
 		character_new_spawn()
 		#print("NEW PRODUCTION LIMIT: " + str(production_limit))
 	#print("PRODUCTION: " + str(production))

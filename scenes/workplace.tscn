@@ -195,7 +195,7 @@ frame_progress = 0.731534
 editor_description = "https://freesound.org/people/Gammelsmurfen778/sounds/474005/
 CC 0"
 stream = ExtResource("4_teqxm")
-volume_db = -4.0
+volume_db = -8.0
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
 editor_description = "https://freesound.org/people/Gammelsmurfen778/sounds/474005/

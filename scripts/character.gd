@@ -144,6 +144,8 @@ func timers_state_change(enabled: bool) -> void:
 		timer_sickness.stop()
 		return
 	
+	# Randomness to starting timers
+	await get_tree().create_timer(randi_range(1, 5)).timeout
 	timer_age.start()
 	timer_energy.start()
 	# timer_production.start()
@@ -178,14 +180,15 @@ func energy_amend(_energy: int = 0) -> void:
 	else:
 		change = _energy
 	energy = clamp(energy + change, 0, 100)
-	# "afk"
-	if (facility == "dormitory" or facility == "null") and not sickness:
-		labels.state_label_show(nothing_to_do_messages)
-	# Recreation
-	if energy < 100 and facility == "recreation_zone" and not sickness:
-		labels.state_label_show(recreation_messages[0])
-	if energy == 100 and not sickness:
-		labels.state_label_show(recreation_messages[1])
+	if not sickness:
+		# "afk"
+		if (facility == "dormitory" or facility == "null"):
+			labels.state_label_show(nothing_to_do_messages)
+		# Recreation
+		if energy < 100 and facility == "recreation_zone":
+			labels.state_label_show(recreation_messages[0])
+		if energy == 100 and not (facility == "workplace"):
+			labels.state_label_show(recreation_messages[1])
 	# TODO: for testing
 	if energy < ENERGY_LOW:
 		if not sickness:
