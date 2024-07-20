@@ -42,6 +42,8 @@ var characters: Array = Array()
 var started: bool = false
 ## When a small tutorial is ongoing
 var tutorial: bool = true
+## When shown lose or win screen, doesn't trigger day night cycle
+var lose_or_win_shown: bool = false
 
 ## Music starts playing after tutorial
 @onready var audio_music = $AudioMusic
@@ -131,7 +133,7 @@ func start() -> void:
 		character_first.material = null
 		)
 	
-	for i in 3:
+	for i in 2:
 		await get_tree().create_timer(2).timeout
 		character_new_spawn()
 	
@@ -146,7 +148,7 @@ func start() -> void:
 
 ## Spawns a new character
 func character_new_spawn() -> void:
-	var character = characters_preload.pick_random().instantiate()
+	var character: Character = characters_preload.pick_random().instantiate()
 	character.production.connect(_on_character_production)
 	character.action_taken.connect(_on_character_action_taken)
 	character.death.connect(_on_character_death)
@@ -181,7 +183,12 @@ func character_new_spawn() -> void:
 		# Game win
 		canvas_dim(true)
 		$UI.show_win()
+		lose_or_win_shown = true
+		# Audio
+		var tween_music: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+		tween_music.tween_property(audio_music, "volume_db", -30, 7)
 		await get_tree().create_timer(10).timeout
+		
 		automatic_restart()
 
 
@@ -197,8 +204,8 @@ func characters_amount() -> int:
 
 ## When night comes, and morning arrives
 func night() -> void:
-	# TODO: testing needed
-	#return
+	if lose_or_win_shown:
+		return
 	
 	var characters_positions: Array = Array()
 	characters_positions.resize(15)
@@ -213,14 +220,14 @@ func night() -> void:
 	for i in characters.size():
 		if characters[i] is Character:
 			var character: Character = characters[i]
-			# Save position
-			characters_positions[i] = character.global_position
 			# Doesn't affect arriving characters or characters that have not yet moved
 			if character.input_prevent or character.first_action:
 				character.input_prevent = true
 				continue
 			character.input_prevent = true
 			character.timers_state_change(false)
+			# Save position
+			characters_positions[i] = character.global_position
 			tween.tween_property(character, "global_position", Vector2($Dormitory.global_position.x + randi_range(-100, 100),
 				$Dormitory.global_position.y + randi_range(-50, 50)), 1.5)
 	
@@ -308,7 +315,7 @@ func _on_character_death(id: int) -> void:
 	
 	characters[id] = 0
 	# TODO: needs to be tested
-	production_limit = int(production_limit * 0.6)
+	production_limit = int(production_limit * 0.525)
 	$UI.update_label(production, production_limit)
 	# Make correct door red
 	$Dormitory.door_change(id, true)
@@ -317,12 +324,12 @@ func _on_character_death(id: int) -> void:
 		# Game lose
 		canvas_dim(true)
 		$UI.show_lose()
-		
+		lose_or_win_shown = true
 		# Audio
 		var tween_music: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween_music.tween_property(audio_music, "volume_db", -30, 7)
-		
 		await get_tree().create_timer(10).timeout
+		
 		automatic_restart()
 
 
@@ -333,7 +340,7 @@ func _on_character_production(value: int) -> void:
 	production += value
 	#print("PRODUCTION LIMIT: " + str(production_limit))
 	if production >= production_limit:
-		production_limit += int(production_limit * 0.75) #lerp(production, production + production_limit, 1)
+		production_limit += int(production_limit * 0.7) #lerp(production, production + production_limit, 1)
 		character_new_spawn()
 		#print("NEW PRODUCTION LIMIT: " + str(production_limit))
 	#print("PRODUCTION: " + str(production))
