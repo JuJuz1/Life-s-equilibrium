@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://dcye3hshybkmc"]
+[gd_scene load_steps=23 format=3 uid="uid://dcye3hshybkmc"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_od65m"]
 [ext_resource type="PackedScene" uid="uid://dajefe25vpnrg" path="res://scenes/workplace.tscn" id="2_hpr3n"]
@@ -11,26 +11,46 @@
 [ext_resource type="Material" uid="uid://xg6h5gdeg71v" path="res://materials/material_unshaded.tres" id="7_kptb1"]
 [ext_resource type="Texture2D" uid="uid://df1fjgx7us2wt" path="res://graphics/arrow.png" id="8_awgej"]
 [ext_resource type="AudioStream" uid="uid://c6gry6rctsmdd" path="res://audio/music.mp3" id="10_47fip"]
+[ext_resource type="Texture2D" uid="uid://c551rmxgdar6x" path="res://graphics/settings.png" id="11_it16j"]
 [ext_resource type="AudioStream" uid="uid://dv1htoa82gn2i" path="res://audio/bell.mp3" id="11_l7ye5"]
 [ext_resource type="AudioStream" uid="uid://b5si086ih552e" path="res://audio/death.mp3" id="12_3gkyt"]
+[ext_resource type="Script" path="res://scripts/settings_menu.gd" id="12_re0db"]
+[ext_resource type="StyleBox" uid="uid://bwkxa2k33rdmo" path="res://materials/style_box_red.tres" id="13_p42pd"]
+[ext_resource type="StyleBox" uid="uid://gbt6w85nrgo3" path="res://materials/style_box_orange.tres" id="13_rrq22"]
 [ext_resource type="AudioStream" uid="uid://csb0qul10hgec" path="res://audio/alarm.mp3" id="14_ilcfh"]
 [ext_resource type="AudioStream" uid="uid://d1kh2nibip6sl" path="res://audio/snoring.mp3" id="14_w0xej"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1cqoc"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pdqhg"]
+bg_color = Color(0.207843, 0.352941, 0.0745098, 0.819608)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_skbn8"]
+bg_color = Color(0.127004, 0.669873, 0.766421, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+
 [node name="World" type="Node2D"]
 script = ExtResource("1_od65m")
 
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
-color = Color(0.196078, 0.196078, 0.196078, 1)
-
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureBackground" type="TextureRect" parent="."]
 modulate = Color(0.411765, 0.760784, 0.439216, 0.564706)
 offset_left = -58.0
 offset_top = -26.0
 offset_right = 2026.0
 offset_bottom = 1143.0
 texture = SubResource("CanvasTexture_1cqoc")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.196078, 0.196078, 0.196078, 1)
 
 [node name="DirtRoad" type="Sprite2D" parent="."]
 position = Vector2(109, 389)
@@ -87,7 +107,6 @@ text = "Kaupungin tulot"
 
 [node name="LabelWin" type="Label" parent="UI"]
 modulate = Color(1, 1, 1, 0)
-z_index = 10
 material = ExtResource("7_kptb1")
 layout_mode = 0
 offset_left = -463.0
@@ -105,7 +124,6 @@ horizontal_alignment = 1
 
 [node name="LabelLose" type="Label" parent="UI"]
 modulate = Color(1, 1, 1, 0)
-z_index = 10
 material = ExtResource("7_kptb1")
 layout_mode = 0
 offset_left = -463.0
@@ -122,7 +140,6 @@ horizontal_alignment = 1
 
 [node name="LabelInfo" type="Label" parent="UI"]
 modulate = Color(1, 1, 1, 0)
-z_index = 10
 material = ExtResource("7_kptb1")
 layout_mode = 0
 offset_left = -445.0
@@ -150,6 +167,130 @@ rotation = 0.275259
 scale = Vector2(1.63772, 1.63772)
 texture = ExtResource("8_awgej")
 
+[node name="ButtonSettings" type="Button" parent="UI"]
+layout_mode = 0
+offset_left = -77.0
+offset_top = 429.0
+offset_right = -9.0
+offset_bottom = 497.0
+icon = ExtResource("11_it16j")
+
+[node name="SettingsMenu" type="PanelContainer" parent="UI"]
+process_mode = 2
+visible = false
+z_index = 10
+material = ExtResource("7_kptb1")
+layout_mode = 0
+offset_left = -385.0
+offset_top = -17.0
+offset_right = 410.0
+offset_bottom = 430.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pdqhg")
+script = ExtResource("12_re0db")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/SettingsMenu"]
+process_mode = 2
+use_parent_material = true
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/SettingsMenu/MarginContainer"]
+use_parent_material = true
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="LabelSettings" type="Label" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
+use_parent_material = true
+custom_minimum_size = Vector2(0, 55)
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+theme_override_styles/normal = SubResource("StyleBoxFlat_skbn8")
+text = "Asetukset"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LabelVolumeMaster" type="Label" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
+use_parent_material = true
+custom_minimum_size = Vector2(400, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = ExtResource("13_p42pd")
+text = "Yleinen"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSliderMaster" type="HSlider" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
+use_parent_material = true
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+min_value = -20.0
+max_value = 20.0
+
+[node name="LabelMusic" type="Label" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
+use_parent_material = true
+custom_minimum_size = Vector2(400, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = ExtResource("13_rrq22")
+text = "Musiikki"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSliderMusic" type="HSlider" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
+use_parent_material = true
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+min_value = -20.0
+max_value = 20.0
+
+[node name="LabelEffects" type="Label" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
+use_parent_material = true
+custom_minimum_size = Vector2(400, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = ExtResource("13_rrq22")
+text = "Ääni efektit"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSliderEffects" type="HSlider" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
+use_parent_material = true
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+min_value = -20.0
+max_value = 20.0
+
+[node name="ButtonClose" type="Button" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
+use_parent_material = true
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+text = "Valmis"
+
+[node name="AudioCharacterArrive" type="AudioStreamPlayer" parent="UI/SettingsMenu"]
+process_mode = 3
+editor_description = "https://freesound.org/people/Zabuhailo/sounds/242409/
+CC 4.0"
+stream = ExtResource("11_l7ye5")
+volume_db = -4.0
+bus = &"Effects"
+
+[node name="TextureBlack" type="TextureRect" parent="."]
+visible = false
+modulate = Color(0, 0, 0, 1)
+offset_left = -58.0
+offset_top = -26.0
+offset_right = 2026.0
+offset_bottom = 1143.0
+texture = SubResource("CanvasTexture_1cqoc")
+
 [node name="CharacterSpawn" type="Marker2D" parent="."]
 position = Vector2(-179, 379)
 
@@ -160,30 +301,42 @@ wait_time = 60.0
 wait_time = 30.0
 
 [node name="AudioMusic" type="AudioStreamPlayer" parent="."]
+process_mode = 3
 editor_description = "https://pixabay.com/fi/music/sarjakuvia-your-game-comedy-173310/
 
 Music by Oleksii Holubiev from Pixabay"
 stream = ExtResource("10_47fip")
 volume_db = -20.0
+bus = &"Music"
 
 [node name="AudioCharacterArrive" type="AudioStreamPlayer" parent="."]
 editor_description = "https://freesound.org/people/Zabuhailo/sounds/242409/
 CC 4.0"
 stream = ExtResource("11_l7ye5")
 volume_db = -4.0
+bus = &"Effects"
 
 [node name="AudioCharacterDeath" type="AudioStreamPlayer" parent="."]
 editor_description = "https://freesound.org/people/punisherdan/sounds/444455/
 CC 0"
 stream = ExtResource("12_3gkyt")
+bus = &"Effects"
 
 [node name="AudioNight" type="AudioStreamPlayer" parent="."]
 editor_description = "https://freesound.org/people/mattyharm/sounds/432996/
 CC 0"
 stream = ExtResource("14_w0xej")
 volume_db = -3.0
+bus = &"Effects"
 
 [node name="AudioMorning" type="AudioStreamPlayer" parent="."]
 editor_description = "Alarm.wav by Tempouser -- https://freesound.org/s/162851/ -- License: Attribution NonCommercial 3.0"
 stream = ExtResource("14_ilcfh")
 volume_db = -5.0
+bus = &"Effects"
+
+[connection signal="pressed" from="UI/ButtonSettings" to="UI/SettingsMenu" method="_on_button_settings_pressed"]
+[connection signal="value_changed" from="UI/SettingsMenu/MarginContainer/VBoxContainer/HSliderMaster" to="UI/SettingsMenu" method="_on_h_slider_master_value_changed"]
+[connection signal="value_changed" from="UI/SettingsMenu/MarginContainer/VBoxContainer/HSliderMusic" to="UI/SettingsMenu" method="_on_h_slider_music_value_changed"]
+[connection signal="value_changed" from="UI/SettingsMenu/MarginContainer/VBoxContainer/HSliderEffects" to="UI/SettingsMenu" method="_on_h_slider_effects_value_changed"]
+[connection signal="pressed" from="UI/SettingsMenu/MarginContainer/VBoxContainer/ButtonClose" to="UI/SettingsMenu" method="_on_button_close_pressed"]

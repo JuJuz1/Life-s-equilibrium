@@ -15,6 +15,10 @@ run/main_scene="res://scenes/world.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://graphics/faces/face_boy.png"
 
+[audio]
+
+buses/default_bus_layout="res://materials/default_bus_layout.tres"
+
 [display]
 
 window/stretch/mode="viewport"

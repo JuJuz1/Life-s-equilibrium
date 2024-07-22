@@ -309,7 +309,7 @@ func produce() -> void:
 	# If energy is low, currently 30
 	if energy < ENERGY_LOW:
 		production.emit(production_value - 1)
-	# If below 10 -> no value
+	# If below 15 -> no value
 	elif energy < 15:
 		production.emit(0)
 	else:
@@ -330,6 +330,7 @@ func _on_button_button_down() -> void:
 	offset = get_global_mouse_position() - position
 	# Emit to reset timer to restart the game
 	action_taken.emit()
+	#print("action")
 
 
 ## When not pressed
@@ -339,7 +340,7 @@ func _on_button_button_up() -> void:
 
 ## When mouse hovers over the character
 func _on_button_mouse_entered() -> void:
-	if input_prevent:
+	if input_prevent or get_tree().paused:
 		return
 	$Sprite2D.modulate.a = 0.5
 

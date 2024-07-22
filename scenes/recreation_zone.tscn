@@ -22,10 +22,12 @@ texture = ExtResource("2_4ct64")
 editor_description = "forest edge spring NL 1146AM 220414_0336.wav by klankbeeld -- https://freesound.org/s/629446/ -- License: Attribution 4.0"
 stream = ExtResource("3_5axjr")
 volume_db = 2.0
+bus = &"Effects"
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
 editor_description = "forest edge spring NL 1146AM 220414_0336.wav by klankbeeld -- https://freesound.org/s/629446/ -- License: Attribution 4.0"
 stream = ExtResource("4_a2g7i")
+bus = &"Effects"
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_area_exited"]

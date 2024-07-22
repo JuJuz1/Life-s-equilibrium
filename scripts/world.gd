@@ -63,6 +63,9 @@ func _ready() -> void:
 	characters.fill(0)
 	
 	canvas_tint = $CanvasModulate.color
+	
+	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property($TextureBlack, "modulate:a", 0, 3)
 
 
 ## Any input
@@ -88,10 +91,10 @@ func start() -> void:
 	
 	# TODO: change amount
 	for i in 1:
-		await get_tree().create_timer(2).timeout
+		await get_tree().create_timer(2, false).timeout
 		character_new_spawn()
 	
-	await get_tree().create_timer(4).timeout
+	await get_tree().create_timer(4, false).timeout
 	canvas_dim(true)
 	
 	var tween_info: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
@@ -111,13 +114,13 @@ func start() -> void:
 	await tutorial_over
 	tween_arrow.stop()
 	tween_character.stop()
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(1, false).timeout
 	
 	# Audio
 	audio_music.play()
 	var tween_music: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween_music.tween_property(audio_music, "volume_db", 0, 2)
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(1, false).timeout
 	
 	canvas_dim(false)
 	
@@ -135,7 +138,7 @@ func start() -> void:
 		)
 	
 	for i in 2:
-		await get_tree().create_timer(2).timeout
+		await get_tree().create_timer(2, false).timeout
 		character_new_spawn()
 	
 	timer_restart.timeout.connect(automatic_restart)
@@ -169,12 +172,12 @@ func character_new_spawn() -> void:
 	add_child(character)
 	
 	# Audio
-	await get_tree().create_timer(1.7).timeout
+	await get_tree().create_timer(1.7, false).timeout
 	if not audio_character_arrive.playing:
 		audio_character_arrive.play()
 	
 	# TODO: for door to change color with delay
-	await get_tree().create_timer(2.3).timeout
+	await get_tree().create_timer(2.3, false).timeout
 	# Make correct door green
 	$Dormitory.door_change(character.id, false)
 	
@@ -188,7 +191,7 @@ func character_new_spawn() -> void:
 		# Audio
 		var tween_music: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween_music.tween_property(audio_music, "volume_db", -30, 7)
-		await get_tree().create_timer(10).timeout
+		await get_tree().create_timer(10, false).timeout
 		
 		automatic_restart()
 
@@ -233,26 +236,26 @@ func night() -> void:
 				$Dormitory.global_position.y + randi_range(-50, 50)), 1.5)
 	
 	canvas_dim(true)
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(1, false).timeout
 	audio_night.play()
 	
-	await get_tree().create_timer(3).timeout
+	await get_tree().create_timer(3, false).timeout
 	tween_info = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween_info.tween_property($UI/LabelInfo, "modulate:a", 0, 2)
 	
-	await get_tree().create_timer(2).timeout
+	await get_tree().create_timer(2, false).timeout
 	tween_info = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	$UI/LabelInfo.text = "Aamu sarastaa..."
 	tween_info.tween_property($UI/LabelInfo, "modulate:a", 1, 2)
 	
-	await get_tree().create_timer(2).timeout
+	await get_tree().create_timer(2, false).timeout
 	audio_morning.play()
 	
 	tween_info = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
 	tween_info.tween_property($UI/LabelInfo, "modulate:a", 0, 4)
 	tween_info.tween_property(audio_music, "volume_db", audio_music.volume_db + 10, 3)
 	
-	await get_tree().create_timer(1.5).timeout
+	await get_tree().create_timer(1.5, false).timeout
 	canvas_dim(false)
 	
 	var tween_out: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC).set_parallel(true)
@@ -271,11 +274,11 @@ func night() -> void:
 			tween_out.finished.connect(func() -> void:
 				character.input_prevent = false
 				character.timers_state_change(true)
-				await get_tree().create_timer(0.5).timeout
+				await get_tree().create_timer(0.5, false).timeout
 				character.energy_amend(15)
 				)
 	
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(1, false).timeout
 	print("NIGHT FINISHED")
 
 
@@ -293,7 +296,7 @@ func canvas_dim(enabled: bool) -> void:
 func canvas_dim_cycle() -> void:
 	timer_cycle.stop()
 	await night()
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(1, false).timeout
 	timer_cycle.start()
 
 
@@ -301,10 +304,10 @@ func canvas_dim_cycle() -> void:
 func _on_character_action_taken() -> void:
 	if tutorial:
 		tutorial = false
-		await get_tree().create_timer(1).timeout
+		await get_tree().create_timer(1, false).timeout
 		$UI/LabelInfo.text = "Hyvä!"
 		var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_property($UI/LabelInfo, "modulate:a", 0, 3)
+		tween.tween_property($UI/LabelInfo, "modulate:a", 0, 4)
 		tutorial_over.emit()
 	
 	timer_restart.start()
@@ -331,7 +334,7 @@ func _on_character_death(id: int) -> void:
 		# Audio
 		var tween_music: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 		tween_music.tween_property(audio_music, "volume_db", -30, 7)
-		await get_tree().create_timer(10).timeout
+		await get_tree().create_timer(10, false).timeout
 		
 		automatic_restart()
 
@@ -349,6 +352,12 @@ func _on_character_production(value: int) -> void:
 	#print("PRODUCTION: " + str(production))
 	$UI.update_label(production, production_limit)
 
+
+""" # NOT NEEDED AS SIGNALS STILL WORK AND TRIGGER METHODS WHEN TREE IS PAUSED
+func _on_button_settings_pressed() -> void:
+	#get_tree().paused = true
+	pass
+"""
 
 ## Automatically restarts the game
 func automatic_restart() -> void:

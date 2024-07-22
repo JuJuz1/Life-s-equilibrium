@@ -23,6 +23,7 @@ editor_description = "https://freesound.org/people/b-train/sounds/410379/
 CC 0"
 stream = ExtResource("3_8ivpb")
 volume_db = -3.0
+bus = &"Effects"
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_area_exited"]

@@ -196,12 +196,14 @@ editor_description = "https://freesound.org/people/Gammelsmurfen778/sounds/47400
 CC 0"
 stream = ExtResource("4_teqxm")
 volume_db = -8.0
+bus = &"Effects"
 
 [node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
 editor_description = "https://freesound.org/people/Gammelsmurfen778/sounds/474005/
 CC 0"
 stream = ExtResource("5_tj25m")
 volume_db = -4.0
+bus = &"Effects"
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
 [connection signal="area_exited" from="." to="." method="_on_area_exited"]
