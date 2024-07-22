@@ -19,6 +19,16 @@ config/icon="res://graphics/faces/face_boy.png"
 
 buses/default_bus_layout="res://materials/default_bus_layout.tres"
 
+[debug]
+
+gdscript/warnings/untyped_declaration=1
+gdscript/warnings/inferred_declaration=1
+gdscript/warnings/unsafe_property_access=1
+gdscript/warnings/unsafe_method_access=1
+gdscript/warnings/unsafe_cast=1
+gdscript/warnings/unsafe_call_argument=1
+gdscript/warnings/return_value_discarded=1
+
 [display]
 
 window/stretch/mode="viewport"
