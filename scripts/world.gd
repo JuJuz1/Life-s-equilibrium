@@ -182,7 +182,7 @@ func character_new_spawn() -> void:
 	
 	# Find the first slot that doesn't contain a character reference
 	# Assign to the array and assing an id based on the position in the array
-	for i in characters.size():
+	for i: int in characters.size():
 		#print(characters[i])
 		if characters[i] is not Character:
 			characters[i] = character

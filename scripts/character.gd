@@ -219,11 +219,10 @@ func sickness_check() -> void:
 	# Used to determine if message should be shown
 	var was_sick: bool = sickness
 	
-	var random = randf_range(0, 1)
+	var random: float = randf_range(0, 1)
 	var age_probability: float = float(age) / 100
 	#print("RANDOM: " + str(random))
 	#print("AGE PROBABILITY: " + str(age_probability))
-	
 	# If not inside hospital -> gets sickness more often and higher chance to die to sickness
 	# Else -> lower chance to get sick, lower chance to die and small chance to cure
 	
@@ -351,7 +350,7 @@ func _on_button_mouse_exited() -> void:
 
 
 ## Called every frame, used to move the character
-func _process(_delta) -> void:
+func _process(_delta: float) -> void:
 	# For good measure
 	if input_prevent:
 		return
