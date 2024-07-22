@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dcye3hshybkmc"]
+[gd_scene load_steps=17 format=3 uid="uid://dcye3hshybkmc"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_od65m"]
 [ext_resource type="PackedScene" uid="uid://dajefe25vpnrg" path="res://scenes/workplace.tscn" id="2_hpr3n"]
@@ -14,6 +14,7 @@
 [ext_resource type="AudioStream" uid="uid://dv1htoa82gn2i" path="res://audio/bell.mp3" id="11_l7ye5"]
 [ext_resource type="AudioStream" uid="uid://b5si086ih552e" path="res://audio/death.mp3" id="12_3gkyt"]
 [ext_resource type="AudioStream" uid="uid://csb0qul10hgec" path="res://audio/alarm.mp3" id="14_ilcfh"]
+[ext_resource type="AudioStream" uid="uid://d1kh2nibip6sl" path="res://audio/snoring.mp3" id="14_w0xej"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_1cqoc"]
 
@@ -52,7 +53,7 @@ position = Vector2(222, 526)
 position = Vector2(269, 194)
 
 [node name="Hospital" parent="." instance=ExtResource("5_nj28b")]
-position = Vector2(960, 146)
+position = Vector2(951, 158)
 
 [node name="RecreationZone" parent="." instance=ExtResource("4_yo5hm")]
 position = Vector2(872, 493)
@@ -68,18 +69,18 @@ script = ExtResource("3_18sc0")
 
 [node name="LabelProduction" type="Label" parent="UI"]
 layout_mode = 0
-offset_left = -2.0
+offset_left = -18.0
 offset_top = -41.0
-offset_right = 102.0
+offset_right = 86.0
 offset_bottom = 28.0
 theme_override_font_sizes/font_size = 50
 text = "0 / 5"
 
 [node name="LabelProductionInfo" type="Label" parent="UI"]
 layout_mode = 0
-offset_left = -81.0
+offset_left = -89.0
 offset_top = -82.0
-offset_right = 311.0
+offset_right = 303.0
 offset_bottom = -13.0
 theme_override_font_sizes/font_size = 40
 text = "Kaupungin tulot"
@@ -175,6 +176,12 @@ volume_db = -4.0
 editor_description = "https://freesound.org/people/punisherdan/sounds/444455/
 CC 0"
 stream = ExtResource("12_3gkyt")
+
+[node name="AudioNight" type="AudioStreamPlayer" parent="."]
+editor_description = "https://freesound.org/people/mattyharm/sounds/432996/
+CC 0"
+stream = ExtResource("14_w0xej")
+volume_db = -3.0
 
 [node name="AudioMorning" type="AudioStreamPlayer" parent="."]
 editor_description = "Alarm.wav by Tempouser -- https://freesound.org/s/162851/ -- License: Attribution NonCommercial 3.0"

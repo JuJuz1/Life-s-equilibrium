@@ -46,10 +46,11 @@ var tutorial: bool = true
 var lose_or_win_shown: bool = false
 
 ## Music starts playing after tutorial
-@onready var audio_music = $AudioMusic
-@onready var audio_character_arrive = $AudioCharacterArrive
-@onready var audio_character_death = $AudioCharacterDeath
-@onready var audio_morning = $AudioMorning
+@onready var audio_music: AudioStreamPlayer = $AudioMusic
+@onready var audio_character_arrive: AudioStreamPlayer = $AudioCharacterArrive
+@onready var audio_character_death: AudioStreamPlayer = $AudioCharacterDeath
+@onready var audio_night: AudioStreamPlayer = $AudioNight
+@onready var audio_morning: AudioStreamPlayer = $AudioMorning
 
 func _ready() -> void:
 	characters_preload.append(CHARACTER_BASE)
@@ -232,6 +233,8 @@ func night() -> void:
 				$Dormitory.global_position.y + randi_range(-50, 50)), 1.5)
 	
 	canvas_dim(true)
+	await get_tree().create_timer(1).timeout
+	audio_night.play()
 	
 	await get_tree().create_timer(3).timeout
 	tween_info = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)

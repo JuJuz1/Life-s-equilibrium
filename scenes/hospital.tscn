@@ -8,6 +8,7 @@
 size = Vector2(323, 222.5)
 
 [node name="Hospital" type="Area2D"]
+scale = Vector2(1.1, 1.1)
 script = ExtResource("1_ejoc2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
