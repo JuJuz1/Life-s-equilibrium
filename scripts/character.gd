@@ -105,12 +105,12 @@ func _ready() -> void:
 	
 	# To prevent input
 	input_prevent = true
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(1, false).timeout
 	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_LINEAR)
 	tween.tween_property(self, "position:x", position.x + randi_range(380, 420), 2)
 	tween.tween_property(self, "position:y", position.y + randi_range(140, 200), 1)
 	tween.finished.connect(func() -> void:
-		await get_tree().create_timer(1).timeout
+		await get_tree().create_timer(1, false).timeout
 		input_prevent = false
 		)
 
@@ -145,7 +145,7 @@ func timers_state_change(enabled: bool) -> void:
 		return
 	
 	# Randomness to starting timers
-	await get_tree().create_timer(randi_range(1, 5)).timeout
+	await get_tree().create_timer(randi_range(1, 5), false).timeout
 	timer_age.start()
 	timer_energy.start()
 	# timer_production.start()
@@ -356,4 +356,7 @@ func _process(_delta) -> void:
 	if input_prevent:
 		return
 	if dragging:
-		position = get_global_mouse_position() - offset
+		position = lerp(global_position, get_global_mouse_position() - offset, 0.5)
+		# Prevent dragging outside viewport
+		position.x = clamp(global_position.x, 0, get_viewport_rect().size.x)
+		position.y = clamp(global_position.y, 0, get_viewport_rect().size.y)

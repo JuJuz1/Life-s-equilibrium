@@ -17,6 +17,7 @@
 [ext_resource type="Script" path="res://scripts/settings_menu.gd" id="12_re0db"]
 [ext_resource type="StyleBox" uid="uid://bwkxa2k33rdmo" path="res://materials/style_box_red.tres" id="13_p42pd"]
 [ext_resource type="StyleBox" uid="uid://gbt6w85nrgo3" path="res://materials/style_box_orange.tres" id="13_rrq22"]
+[ext_resource type="StyleBox" uid="uid://d4bgn5f6m7tma" path="res://materials/style_box_cyan.tres" id="13_v7053"]
 [ext_resource type="AudioStream" uid="uid://csb0qul10hgec" path="res://audio/alarm.mp3" id="14_ilcfh"]
 [ext_resource type="AudioStream" uid="uid://d1kh2nibip6sl" path="res://audio/snoring.mp3" id="14_w0xej"]
 
@@ -30,13 +31,6 @@ border_width_right = 10
 border_width_bottom = 10
 border_color = Color(0, 0, 0, 1)
 border_blend = true
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_skbn8"]
-bg_color = Color(0.127004, 0.669873, 0.766421, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_od65m")
@@ -77,6 +71,9 @@ position = Vector2(951, 158)
 
 [node name="RecreationZone" parent="." instance=ExtResource("4_yo5hm")]
 position = Vector2(872, 493)
+
+[node name="Characters" type="Node" parent="."]
+editor_description = "Add characters as child of this node. This is to prevent their buttons to appear over settings menu sliders and buttons. Should not even happen but still does, quick fix."
 
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
@@ -170,9 +167,9 @@ texture = ExtResource("8_awgej")
 [node name="ButtonSettings" type="Button" parent="UI"]
 layout_mode = 0
 offset_left = -77.0
-offset_top = 429.0
+offset_top = 480.0
 offset_right = -9.0
-offset_bottom = 497.0
+offset_bottom = 548.0
 icon = ExtResource("11_it16j")
 
 [node name="SettingsMenu" type="PanelContainer" parent="UI"]
@@ -181,9 +178,9 @@ visible = false
 z_index = 10
 material = ExtResource("7_kptb1")
 layout_mode = 0
-offset_left = -385.0
+offset_left = -380.0
 offset_top = -17.0
-offset_right = 410.0
+offset_right = 415.0
 offset_bottom = 430.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_pdqhg")
 script = ExtResource("12_re0db")
@@ -200,14 +197,13 @@ theme_override_constants/margin_bottom = 5
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/SettingsMenu/MarginContainer"]
 use_parent_material = true
 layout_mode = 2
-theme_override_constants/separation = 5
 
 [node name="LabelSettings" type="Label" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
 use_parent_material = true
 custom_minimum_size = Vector2(0, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 35
-theme_override_styles/normal = SubResource("StyleBoxFlat_skbn8")
+theme_override_styles/normal = ExtResource("13_v7053")
 text = "Asetukset"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -266,13 +262,31 @@ layout_mode = 2
 min_value = -20.0
 max_value = 20.0
 
-[node name="ButtonClose" type="Button" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="UI/SettingsMenu/MarginContainer/VBoxContainer"]
+use_parent_material = true
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/SettingsMenu/MarginContainer/VBoxContainer/MarginContainer"]
+use_parent_material = true
+layout_mode = 2
+theme_override_constants/separation = 140
+
+[node name="ButtonClose" type="Button" parent="UI/SettingsMenu/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer"]
 use_parent_material = true
 custom_minimum_size = Vector2(150, 50)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 10
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = ExtResource("13_v7053")
 text = "Valmis"
+
+[node name="ButtonQuit" type="Button" parent="UI/SettingsMenu/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+use_parent_material = true
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = ExtResource("13_p42pd")
+text = "Lopeta"
 
 [node name="AudioCharacterArrive" type="AudioStreamPlayer" parent="UI/SettingsMenu"]
 process_mode = 3
@@ -339,4 +353,5 @@ bus = &"Effects"
 [connection signal="value_changed" from="UI/SettingsMenu/MarginContainer/VBoxContainer/HSliderMaster" to="UI/SettingsMenu" method="_on_h_slider_master_value_changed"]
 [connection signal="value_changed" from="UI/SettingsMenu/MarginContainer/VBoxContainer/HSliderMusic" to="UI/SettingsMenu" method="_on_h_slider_music_value_changed"]
 [connection signal="value_changed" from="UI/SettingsMenu/MarginContainer/VBoxContainer/HSliderEffects" to="UI/SettingsMenu" method="_on_h_slider_effects_value_changed"]
-[connection signal="pressed" from="UI/SettingsMenu/MarginContainer/VBoxContainer/ButtonClose" to="UI/SettingsMenu" method="_on_button_close_pressed"]
+[connection signal="pressed" from="UI/SettingsMenu/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/ButtonClose" to="UI/SettingsMenu" method="_on_button_close_pressed"]
+[connection signal="pressed" from="UI/SettingsMenu/MarginContainer/VBoxContainer/MarginContainer/HBoxContainer/ButtonQuit" to="UI/SettingsMenu" method="_on_button_quit_pressed"]

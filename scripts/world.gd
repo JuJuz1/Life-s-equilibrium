@@ -53,6 +53,10 @@ var lose_or_win_shown: bool = false
 @onready var audio_morning: AudioStreamPlayer = $AudioMorning
 
 func _ready() -> void:
+	#get_tree().set_auto_accept_quit(false)
+	get_tree().quit_on_go_back = false # Mobile disable quit on go back
+	get_tree().root.connect("go_back_requested", settings_open) # Back request, emitted by window
+	
 	characters_preload.append(CHARACTER_BASE)
 	characters_preload.append(CHARACTER_BOY)
 	characters_preload.append(CHARACTER_GIRL)
@@ -68,16 +72,32 @@ func _ready() -> void:
 	tween.tween_property($TextureBlack, "modulate:a", 0, 3)
 
 
+## iOS
+func _notification(what: int) -> void:
+	if not OS.get_name() == "iOS": # Should work
+		return
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		settings_open()
+
+
 ## Any input
 func _unhandled_input(event) -> void:
 	# PC Escape
+	# Now brings up settings menu
 	if event.is_action_pressed("quit"):
-		get_tree().quit()
+		#get_tree().quit()
+		settings_open()
+		#get_viewport().set_input_as_handled()
 	if event.is_action_pressed("click"):
 		#if started:
 			#night()
 			#return
 		start()
+
+
+## Needed for mobile
+func settings_open() -> void:
+	$UI/ButtonSettings.pressed.emit()
 
 
 ## Starts game and tutorial 
@@ -169,7 +189,7 @@ func character_new_spawn() -> void:
 			character.id = i
 			break
 	
-	add_child(character)
+	$Characters.add_child(character)
 	
 	# Audio
 	await get_tree().create_timer(1.7, false).timeout

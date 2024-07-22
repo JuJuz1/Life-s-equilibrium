@@ -33,7 +33,7 @@ func state_label_show(message: String) -> void:
 	tween_font_color.tween_property($LabelState, "modulate:g", 1, 1)
 	tween_font_color.tween_property($LabelState, "modulate:b", 1, 1)
 	
-	await get_tree().create_timer(3).timeout
+	await get_tree().create_timer(3, false).timeout
 	# Have to reassign, otherwise throws tween not valid error
 	tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property($LabelState, "modulate:a", 0, 1)
