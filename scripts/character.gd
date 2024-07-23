@@ -355,7 +355,8 @@ func _process(_delta: float) -> void:
 	if input_prevent:
 		return
 	if dragging:
-		position = lerp(global_position, get_global_mouse_position() - offset, 0.5)
+		position = lerp(global_position, get_global_mouse_position() - offset, 0.4)
 		# Prevent dragging outside viewport
-		position.x = clamp(global_position.x, 0, get_viewport_rect().size.x)
-		position.y = clamp(global_position.y, 0, get_viewport_rect().size.y)
+		var coll_shape_size: float = $CollisionShape2D.shape.radius / 2
+		position.x = clamp(global_position.x, coll_shape_size, get_viewport_rect().size.x - coll_shape_size)
+		position.y = clamp(global_position.y, coll_shape_size, get_viewport_rect().size.y - coll_shape_size)

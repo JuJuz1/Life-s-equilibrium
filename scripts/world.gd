@@ -70,6 +70,8 @@ func _ready() -> void:
 	
 	var tween: Tween = create_tween().set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property($TextureBlack, "modulate:a", 0, 3)
+	tween.finished.connect(func() -> void:
+		$TextureBlack.hide())
 
 
 ## iOS

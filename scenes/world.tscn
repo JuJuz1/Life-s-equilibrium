@@ -297,7 +297,6 @@ volume_db = -4.0
 bus = &"Effects"
 
 [node name="TextureBlack" type="TextureRect" parent="."]
-visible = false
 modulate = Color(0, 0, 0, 1)
 offset_left = -58.0
 offset_top = -26.0
